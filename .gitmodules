@@ -1,6 +1,6 @@
 [submodule "RML-Processor"]
 	path = RML-Processor
-	url = https://github.com/RMLio/RML-Processor.git
+	url = git@github.com:DataFabricRus/RML-Processor.git
 	branch = extension-fno
 [submodule "RML-Model"]
 	path = RML-Model
