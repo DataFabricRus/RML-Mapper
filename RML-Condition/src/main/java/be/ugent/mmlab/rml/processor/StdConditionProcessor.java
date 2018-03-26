@@ -2,7 +2,6 @@ package be.ugent.mmlab.rml.processor;
 
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
-import be.ugent.mmlab.rml.function.ConcreteFunctionProcessor;
 import be.ugent.mmlab.rml.logicalsourcehandler.termmap.TermMapProcessor;
 import be.ugent.mmlab.rml.logicalsourcehandler.termmap.concrete.*;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
@@ -29,8 +28,6 @@ public class StdConditionProcessor implements ConditionProcessor {
     // Log
     private static final Logger log = 
             LoggerFactory.getLogger(StdConditionProcessor.class.getSimpleName());
-
-    private final ConcreteFunctionProcessor fnProcessor = ConcreteFunctionProcessor.getInstance();
 
     @Override
     public boolean processConditions(Object node, TermMapProcessor termMapProcessor, 
