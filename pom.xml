@@ -41,6 +41,7 @@
         <module>Function-Processor</module>
         <module>RML-DataRetrieval</module>
         <module>RML-MetadataHandler</module>
+        <module>Extended-Function-Processor</module>
     </modules>
 
     <build>
