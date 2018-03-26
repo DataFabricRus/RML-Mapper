@@ -1,6 +1,6 @@
 package be.ugent.mmlab.rml.logicalsourcehandler.termmap;
 
-import be.ugent.mmlab.rml.function.ConcreteFunctionProcessor;
+import cc.datafabric.function.ConcreteFunctionProcessor;
 import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import be.ugent.mmlab.rml.model.RDFTerm.TermMap;
 import be.ugent.mmlab.rml.model.RDFTerm.TermType;
@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-//import java.util.stream.Collectors;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;

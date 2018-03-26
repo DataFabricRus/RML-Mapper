@@ -2,7 +2,7 @@ package be.ugent.mmlab.rml.logicalsourcehandler.termmap.concrete;
 
 import be.ugent.mmlab.rml.logicalsourcehandler.termmap.AbstractTermMapProcessor;
 import be.ugent.mmlab.rml.xml.XOMBuilder;
-import java.io.StringBufferInputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.xpath.XPathException;
@@ -56,8 +56,8 @@ public class XPathTermMapProcessor extends AbstractTermMapProcessor {
         } catch (SAXPathException ex) {
             log.error("SAXPathException " + ex);
         }
-        StringBufferInputStream input = 
-                new StringBufferInputStream(node.toXML().toString());
+        StringReader input =
+                new StringReader(node.toXML().toString());
         
         InputSource source = new InputSource(input);
         Event event = dog.createEvent();
