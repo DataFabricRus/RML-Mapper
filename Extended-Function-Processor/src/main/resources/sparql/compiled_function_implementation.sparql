@@ -1,0 +1,14 @@
+PREFIX fno: <https://w3id.org/function/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <https://w3id.org/datafabric.cc/ontologies/functionimpl#>
+
+SELECT ?path ?type
+WHERE {
+  BIND(?iri AS ?function) .
+  ?function :isImplementedBy ?impl .
+  ?impl :isImplementedIn ?lib .
+  ?lib :libraryPath ?path .
+  ?lib :libraryType ?type .
+}

@@ -1,0 +1,14 @@
+PREFIX fno: <https://w3id.org/function/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX dcterms: <http://purl.org/dc/terms/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX : <http://semweb.datasciencelab.be/ns/grel#> 
+
+SELECT (GROUP_CONCAT(?predicate; SEPARATOR=",") AS ?predicates) (GROUP_CONCAT(?type; SEPARATOR=",") AS ?types)
+WHERE{
+  BIND(?iri AS ?function) .
+  ?function fno:expects/rdf:rest*/rdf:first ?parameters.
+  ?parameters fno:type ?type .
+  ?parameters fno:predicate ?predicate .
+} GROUP BY ?function ?name
