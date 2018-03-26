@@ -1,0 +1,17 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix mail: <http://example.com/mail#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix note: <http://www.example.com/note/> .
+@prefix dt: <http://www.example.com/DateTime/> .
+@prefix ex: <http://www.example.org/> .
+@prefix dbo: <http://dbpedia.org/ontology/>.
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>.
+
+ex:1 a ex:Test ;
+    ex:login "1test&test" ;
+    ex:uuid "c9c2b6e1-57e0-3959-a9f4-db8b100c3c5d" .
+
+
+ex:2 a ex:Test ;
+    ex:login "2joepie" ;
+    ex:uuid "fa5cff91-a355-3564-b663-48add069f1d0" .

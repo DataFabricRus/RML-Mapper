@@ -16,7 +16,7 @@
 @prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
 @prefix rdf: 	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix ex: 	<http://example.org/> .
-@prefix grel: 	<http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
+@prefix grel: 	<http://semweb.datasciencelab.be/ns/grel#> .
 
 @base	<http://example.com/test> .
 

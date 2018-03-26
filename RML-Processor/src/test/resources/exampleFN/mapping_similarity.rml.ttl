@@ -16,8 +16,8 @@
 @prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
 @prefix rdf: 	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix ex: 	<http://example.org/> .
-@prefix grel: 	<http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
-@prefix sim: 	<http://users.ugent.be/~bjdmeest/function/similarity.ttl#> .
+@prefix grel: 	<http://semweb.datasciencelab.be/ns/grel#> .
+@prefix sim: 	<http://semweb.datasciencelab.be/ns/sfn#> .
 
 @base	<http://example.com/test> .
 
@@ -92,11 +92,11 @@
 		rr:predicate fno:executes ;
 		rr:objectMap [ rr:constant sim:jaccard ] ] ;
 	rr:predicateObjectMap [
-		rr:predicate sim:fromString ;
+		rr:predicate sim:string1 ;
 		rr:objectMap [ rml:reference "coordinates" ] ] ;
     rr:predicateObjectMap [
-        rr:predicate sim:toString ;
+        rr:predicate sim:string2 ;
         rr:objectMap [ rr:constant "50 51" ] ] ;
     rr:predicateObjectMap [
-        rr:predicate sim:thresholdDouble ;
+        rr:predicate sim:threshold ;
         rr:objectMap [ rr:constant "0.8"^^xsd:decimal ] ] .

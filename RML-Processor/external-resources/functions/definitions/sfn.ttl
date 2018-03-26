@@ -1,0 +1,116 @@
+# baseURI: http://semweb.datasciencelab.be/ns/sfn
+
+@prefix : <http://semweb.datasciencelab.be/ns/sfn#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fno: <https://w3id.org/function/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://semweb.datasciencelab.be/ns/sfn>
+  rdf:type owl:Ontology ;
+.
+:booleanOut
+  rdf:type fno:Output ;
+  rdfs:label "output boolean" ;
+  fno:name "output boolean" ;
+  fno:predicate :booleanOutput ;
+  fno:type xsd:boolean ;
+.
+:distanceMeasureParam
+  rdf:type fno:Parameter ;
+  rdfs:label "distance measure" ;
+  fno:name "distance measure" ;
+  fno:predicate :distanceMeasure ;
+  fno:required "true"^^xsd:boolean ;
+  fno:type :DistanceMeasure ;
+.
+:jaccard
+  rdf:type :DistanceMeasure ;
+  rdf:type fno:Function ;
+  dcterms:description "" ;
+  dcterms:title "jaccard" ;
+  rdfs:comment "Jaccard Distance" ;
+  rdfs:label "Jaccard Distance" ;
+  fno:expects (
+      :string1Param
+      :string2Param
+      :thresholdParam
+    ) ;
+  fno:name "jaccard" ;
+  fno:returns (
+      :out
+    ) ;
+.
+:jaroWinkler
+  rdf:type :DistanceMeasure ;
+  rdf:type fno:Function ;
+  dcterms:description "" ;
+  dcterms:title "jaro-winkler" ;
+  rdfs:comment "Jaro Winkler Distance" ;
+  rdfs:label "Jaro Winkler Distance" ;
+  fno:expects (
+      :string1Param
+      :string2Param
+      :thresholdParam
+    ) ;
+  fno:name "jaroWinkler" ;
+  fno:returns (
+      :out
+    ) ;
+.
+:levenshtein
+  rdf:type :DistanceMeasure ;
+  rdf:type fno:Function ;
+  dcterms:description "" ;
+  dcterms:title "levenshtein" ;
+  rdfs:comment "Levenshtein Distance" ;
+  rdfs:label "Levenshtein Distance" ;
+  fno:expects (
+      :string1Param
+      :string2Param
+      :thresholdParam
+    ) ;
+  fno:name "levenshtein" ;
+  fno:returns (
+      :out
+    ) ;
+.
+:out
+  rdf:type fno:Output ;
+  rdfs:label "output boolean" ;
+  fno:name "output boolean" ;
+  fno:predicate :output ;
+  fno:type xsd:boolean ;
+.
+:string1Param
+  rdf:type fno:Parameter ;
+  rdfs:label "string 1 parameter" ;
+  fno:name "string 1 parameter" ;
+  fno:predicate :string1 ;
+  fno:type xsd:string ;
+.
+:string2Param
+  rdf:type fno:Parameter ;
+  rdfs:label "string 2 parameter" ;
+  fno:name "string 2 parameter" ;
+  fno:predicate :string2 ;
+  fno:type xsd:string ;
+.
+:thresholdParam
+  rdf:type fno:Parameter ;
+  rdfs:label "threshold" ;
+  fno:name "threshold" ;
+  fno:predicate :threshold ;
+  fno:required "true"^^xsd:boolean ;
+  fno:type xsd:decimal ;
+.
+:weightParam
+  rdf:type fno:Parameter ;
+  rdfs:label "weight" ;
+  fno:name "weight" ;
+  fno:predicate :weight ;
+  fno:required "false"^^xsd:boolean ;
+  fno:type xsd:decimal ;
+.

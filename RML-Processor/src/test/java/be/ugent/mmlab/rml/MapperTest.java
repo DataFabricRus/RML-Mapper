@@ -355,6 +355,16 @@ public class MapperTest
                 assertMap(fileToRMLFile, null, triplesMap)));
     }
 
+    public void testExampleFnClojure() {
+        URL fileToRMLFile = getClass().getResource(
+                "/exampleFn/mapping_clojure.rml.ttl");
+        URL fileToOutputFile = getClass().getResource(
+                "/exampleFn/example_clojure.output.ttl");
+        String[] triplesMap = {"http://example.com/test#Person_TemplateMapping"};
+        assertTrue(desiredOutput(fileToOutputFile).isEqualTo(
+                assertMap(fileToRMLFile, null, triplesMap)));
+    }
+
 //    public void testExampleFnSubject() {
 //        URL fileToRMLFile = getClass().getResource(
 //                "/exampleFn/mapping_subject.rml.ttl");
@@ -364,7 +374,6 @@ public class MapperTest
 //        assertTrue(desiredOutput(fileToOutputFile).isEqualTo(
 //                assertMap(fileToRMLFile, null, triplesMap)));
 //    }
-
     /*public void testExampleDBP() {
         URL fileToRMLFile = getClass().getResource(
                 "/exampleDBP/mapping.rml.ttl");
