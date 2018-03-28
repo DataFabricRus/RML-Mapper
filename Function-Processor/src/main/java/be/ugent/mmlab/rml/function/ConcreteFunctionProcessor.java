@@ -42,7 +42,7 @@ public class ConcreteFunctionProcessor {
                 log.error(e.getMessage());
             }
             log.debug("basePath: " + basePath);
-            handler = new FunctionHandler(basePath + "/resources/functions");
+            handler = new FunctionHandler(basePath + "/external-resources/functions");
             instance = new ConcreteFunctionProcessor();
         }
         return instance;

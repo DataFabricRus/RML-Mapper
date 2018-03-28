@@ -21,7 +21,7 @@ public class FunctionImplementationResolution {
     private String path;
 
     private FunctionImplementationResolution() {
-        path = System.getProperty("user.dir") + "/resources/functions";
+        path = System.getProperty("user.dir") + "/external-resources/functions";
         File folder = new File(path + "/mappings");
         File[] listOfFiles = folder.listFiles();
         for (File file : listOfFiles) {
