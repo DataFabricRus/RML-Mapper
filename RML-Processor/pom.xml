@@ -100,8 +100,8 @@
             <version>2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>be.ugent.mmlab.rml</groupId>
-            <artifactId>Function-Processor</artifactId>
+            <groupId>cc.datababric</groupId>
+            <artifactId>Extended-Function-Processor</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
