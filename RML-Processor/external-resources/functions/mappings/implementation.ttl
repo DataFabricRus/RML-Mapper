@@ -1,4 +1,5 @@
 # baseURI: https://w3id.org/datafabric.cc/ontologies/implementation
+# imports: http://datafabric.cc/sparqlservices
 # imports: http://datafabric.cc/uuid
 # imports: http://semweb.datasciencelab.be/ns/grel
 # imports: http://semweb.datasciencelab.be/ns/sfn
@@ -12,8 +13,12 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sfn: <http://semweb.datasciencelab.be/ns/sfn#> .
+@prefix sparqlservices: <http://datafabric.cc/sparqlservices#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+sparqlservices:resolve
+  functionimpl:isImplementedBy :sparqlDymmyResolveImpl ;
+.
 datafabric:concatString
   functionimpl:isImplementedBy :concatStringsImpl ;
 .
@@ -46,6 +51,7 @@ sfn:levenshtein
 .
 <https://w3id.org/datafabric.cc/ontologies/implementation>
   rdf:type owl:Ontology ;
+  owl:imports <http://datafabric.cc/sparqlservices> ;
   owl:imports <http://datafabric.cc/uuid> ;
   owl:imports <http://semweb.datasciencelab.be/ns/grel> ;
   owl:imports <http://semweb.datasciencelab.be/ns/sfn> ;
@@ -121,6 +127,16 @@ sfn:levenshtein
   rdf:type functionimpl:FunctionLibrary ;
   functionimpl:isInLanguage functionimpl:Java ;
   functionimpl:libraryPath "SimilarityFunctions" ;
+  functionimpl:libraryType "application/java-archive" ;
+.
+:sparqlDymmyResolveImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :sparqlServicesLibrary ;
+.
+:sparqlServicesLibrary
+  rdf:type functionimpl:FunctionLibrary ;
+  functionimpl:isInLanguage functionimpl:Java ;
+  functionimpl:libraryPath "DummyResolver" ;
   functionimpl:libraryType "application/java-archive" ;
 .
 :toUppercase

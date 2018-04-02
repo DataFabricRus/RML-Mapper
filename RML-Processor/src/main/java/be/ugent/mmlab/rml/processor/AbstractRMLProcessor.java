@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * RML Processor
- * 
+ * <p>
  * This class contains all generic functionality for executing an iteration and
  * processing the mapping
  *
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractRMLProcessor implements RMLProcessor {
     protected Integer enumerator = 0;
-    protected TermMapProcessor termMapProcessor ;
+    protected TermMapProcessor termMapProcessor;
     protected Map<String, String> parameters;
     protected MetadataGenerator metadataGenerator = null;
     protected boolean iterationStatus = false;
@@ -40,9 +40,9 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
      * @param ls the current LogicalSource
      * @return the location of the file or table
      */
-    
+
     // Log
-    private static final Logger log = 
+    private static final Logger log =
             LoggerFactory.getLogger(AbstractRMLProcessor.class.getSimpleName());
 
     /**
@@ -54,33 +54,44 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
     protected String getReference(LogicalSource ls) {
         return ls.getIterator();
     }
-    
+
     public Map<String, String> getParameters() {
         return parameters;
     }
 
-     
+
     @Override
-    public Resource processSubjectMap(RMLProcessor processor, RMLDataset dataset, 
-            TriplesMap map, SubjectMap subjectMap, Object node, String[] exeTriplesMap){
+    public Resource processSubjectMap(RMLProcessor processor, RMLDataset dataset,
+                                      TriplesMap map, SubjectMap subjectMap, Object node, String[] exeTriplesMap) {
         SubjectMapProcessor subMapProcessor;
-        
-        if(!dataset.getClass().getSimpleName().equals("MetadataFileDataset")){
+
+        if (!dataset.getClass().getSimpleName().equals("MetadataFileDataset")) {
             subMapProcessor = new StdSubjectMapProcessor();
-        }
-        else{
-            if(dataset.getMetadataLevel().equals("triplesmap") ||
+        } else {
+            if (dataset.getMetadataLevel().equals("triplesmap") ||
                     dataset.getMetadataLevel().equals("triple") ||
-                    dataset.getMetadataVocab().contains("co") ){
-                
+                    dataset.getMetadataVocab().contains("co")) {
+
                 subMapProcessor = new MetadataSubjectMapProcessor(metadataGenerator);
-            }   
-            else{
+            } else {
                 subMapProcessor = new StdSubjectMapProcessor();
             }
         }
-        Resource subject = subMapProcessor.processSubjectMap(
-                dataset, subjectMap, node, processor);
+        //Process the Function Object Maps
+//        Set<FunctionTermMap> functionTermMaps =
+//                pom.getFunctionTermMaps();
+//        if(functionTermMaps != null && functionTermMaps.size() > 0)
+//            predicateObjectProcessor.processPredicateObjectMap_FunMap(
+//                    dataset, subject, predicate, functionTermMaps, node, map, exeTriplesMap, graphMap);
+
+        Resource subject;
+        if (subjectMap instanceof FunctionTermMap) {
+            subject = subMapProcessor.processSubjectMap(
+                    dataset, (FunctionTermMap) subjectMap, node, processor);
+        } else {
+            subject = subMapProcessor.processSubjectMap(
+                    dataset, subjectMap, node, processor);
+        }
 
         if (subject == null) {
             log.debug("No subject was generated for "
@@ -90,18 +101,18 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
         }
         return subject;
     }
-    
+
     /**
      * Process a predicate object map
      *
      * @param dataset
-     * @param subject   the subject from the triple
-     * @param pom       the predicate object map
-     * @param node      the current node
+     * @param subject the subject from the triple
+     * @param pom     the predicate object map
+     * @param node    the current node
      */
     @Override
     public void processPredicateObjectMap(
-            RMLDataset dataset, Resource subject, PredicateObjectMap pom, 
+            RMLDataset dataset, Resource subject, PredicateObjectMap pom,
             Object node, TriplesMap map, String[] exeTriplesMap,
             RMLProcessor processor, GraphMap graphMap) {
         Set<PredicateMap> predicateMaps = pom.getPredicateMaps();
@@ -109,7 +120,7 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
         //TODO: create processConditionPredicateObjectMap instead
         if (pom.getClass().getSimpleName().equals("StdConditionPredicateObjectMap")) {
             log.debug("Processing conditional POM");
-            
+
             StdConditionPredicateObjectMap tmp =
                     (StdConditionPredicateObjectMap) pom;
             Set<Condition> conditions = tmp.getConditions();
@@ -120,31 +131,30 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
 
             //process conditions
             ConditionProcessor condProcessor = new StdConditionProcessor();
-            if(conditions.size() > 0){
+            if (conditions.size() > 0) {
                 flag = condProcessor.processConditions(
-                    node, termMapProcessor, conditions);
+                        node, termMapProcessor, conditions);
             }
             if (!flag) {
                 //Takes the first conditions
                 //TODO: Change it to get more conditions
-                StdConditionPredicateObjectMap pom2 = 
+                StdConditionPredicateObjectMap pom2 =
                         (StdConditionPredicateObjectMap) pom;
                 Set<PredicateObjectMap> fallbacks = pom2.getFallbackPOMs();
 
                 for (PredicateObjectMap fallback : fallbacks) {
                     //TODO: Calculate fallbackGraphMap
                     GraphMap fallbackGraphMap = null;
-                        processor.processPredicateObjectMap(dataset, subject, fallback,
-                                node, map, exeTriplesMap, processor, fallbackGraphMap);
+                    processor.processPredicateObjectMap(dataset, subject, fallback,
+                            node, map, exeTriplesMap, processor, fallbackGraphMap);
                 }
-            }
-            else
+            } else
                 log.debug("No conditions found.");
         }
         //TODO: Till here
         if (flag) {
             log.debug("Proceed with the POM");
-            
+
             //Go over each predicate map
             for (PredicateMap predicateMap : predicateMaps) {
                 PredicateMapProcessor preMapProcessor =
@@ -152,7 +162,7 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
                 //Get the predicates
                 List<IRI> predicates =
                         preMapProcessor.processPredicateMap(predicateMap, node);
-                if(graphMap == null){
+                if (graphMap == null) {
                     graphMap = predicateMap.getGraphMap();
                 }
 
@@ -163,7 +173,7 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
                             || dataset.getMetadataVocab().contains("co")) {
                         predicateObjectProcessor =
                                 new MetadataObjectMapProcessor(
-                                map, processor, metadataGenerator);
+                                        map, processor, metadataGenerator);
                     } else {
                         predicateObjectProcessor =
                                 new StdObjectMapProcessor(map, processor);
@@ -172,7 +182,7 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
                     //Process the joins first
                     Set<ReferencingObjectMap> referencingObjectMaps =
                             pom.getReferencingObjectMaps();
-                    if(referencingObjectMaps != null && referencingObjectMaps.size() > 0)
+                    if (referencingObjectMaps != null && referencingObjectMaps.size() > 0)
                         predicateObjectProcessor.processPredicateObjectMap_RefObjMap(
                                 dataset, subject, predicate, referencingObjectMaps, node,
                                 map, parameters, exeTriplesMap, graphMap);
@@ -180,7 +190,7 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
                     //Process the Function Object Maps
                     Set<FunctionTermMap> functionTermMaps =
                             pom.getFunctionTermMaps();
-                    if(functionTermMaps != null && functionTermMaps.size() > 0)
+                    if (functionTermMaps != null && functionTermMaps.size() > 0)
                         predicateObjectProcessor.processPredicateObjectMap_FunMap(
                                 dataset, subject, predicate, functionTermMaps, node, map, exeTriplesMap, graphMap);
 
@@ -196,36 +206,33 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
     }
 
 
-
     /**
-     *
      * @param metadataGenerator
      */
     @Override
-    public void setMetadataGenerator(MetadataGenerator metadataGenerator){
-        this.metadataGenerator = metadataGenerator ;
+    public void setMetadataGenerator(MetadataGenerator metadataGenerator) {
+        this.metadataGenerator = metadataGenerator;
     }
-    
+
     /**
-     *
      * @return
      */
     @Override
-    public MetadataGenerator getMetadataGenerator(){
-        return this.metadataGenerator ;
+    public MetadataGenerator getMetadataGenerator() {
+        return this.metadataGenerator;
     }
-    
+
     @Override
-    public Integer getEnumerator(){
+    public Integer getEnumerator() {
         return this.enumerator;
     }
-    
-    public void setIterationStatus(boolean status){
+
+    public void setIterationStatus(boolean status) {
         this.iterationStatus = status;
     }
-    
+
     @Override
-    public boolean getIterationStatus(){
+    public boolean getIterationStatus() {
         return this.iterationStatus;
     }
 }

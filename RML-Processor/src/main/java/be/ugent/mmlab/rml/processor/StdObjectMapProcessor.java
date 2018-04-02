@@ -314,12 +314,14 @@ public class StdObjectMapProcessor implements ObjectMapProcessor {
         }
     }
 
-    public void processPredicateObjectMap_FunMap(
-            RMLDataset dataset, Resource subject, IRI predicate,
-            Set<FunctionTermMap> functionTermMaps, Object node, TriplesMap map,
-            String[] exeTriplesMap, GraphMap graphMap){
-        List<Value> valueList = new ArrayList<>();
-        SimpleValueFactory vf = SimpleValueFactory.getInstance();
+    public void processPredicateObjectMap_FunMap(RMLDataset dataset,
+                                                 Resource subject,
+                                                 IRI predicate,
+                                                 Set<FunctionTermMap> functionTermMaps,
+                                                 Object node,
+                                                 TriplesMap map,
+                                                 String[] exeTriplesMap,
+                                                 GraphMap graphMap){
 
         if(functionTermMaps != null){
             log.debug("Processing Function Term Map");
@@ -342,7 +344,7 @@ public class StdObjectMapProcessor implements ObjectMapProcessor {
         }
     }
 
-    private Map<String,String> retrieveParameters(Object node, TriplesMap functionTriplesMap){
+    public static Map<String,String> retrieveParameters(Object node, TriplesMap functionTriplesMap){
         Map<String,String> parameters = new HashMap<String, String>();
         TermMapProcessorFactory factory = new ConcreteTermMapFactory();
         TermMapProcessor termMapProcessor =
