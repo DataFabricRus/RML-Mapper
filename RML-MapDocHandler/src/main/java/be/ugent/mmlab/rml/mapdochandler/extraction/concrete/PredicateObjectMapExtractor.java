@@ -53,7 +53,7 @@ public class PredicateObjectMapExtractor {
         PredicateObjectMap predicateObjectMap = null;
         Set<PredicateMap> predicateMaps = new HashSet<PredicateMap>();
         Set<ObjectMap> objectMaps = new HashSet<ObjectMap>();
-        Set<ReferencingObjectMap> refObjectMaps = new HashSet<ReferencingObjectMap>();
+        Set<ReferencingObjectMap> refObjectMaps;
         Set<FunctionTermMap> funObjectMaps = new HashSet<FunctionTermMap>();
 
         try {

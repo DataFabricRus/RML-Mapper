@@ -46,15 +46,15 @@ public class TriplesMapExtractor {
             LoggerFactory.getLogger(
             TriplesMapExtractor.class.getSimpleName());
 
-    public void extractTriplesMap(
-            Repository repository, Resource triplesMapSubject,
-            Map<Resource, TriplesMap> triplesMapResources){
-        TriplesMap result = extractAndReturnTriplesMap(repository, triplesMapSubject, triplesMapResources);
+    public void extractTriplesMap(Repository repository,
+                                  Resource triplesMapSubject,
+                                  Map<Resource, TriplesMap> triplesMapResources){
+        extractAndReturnTriplesMap(repository, triplesMapSubject, triplesMapResources);
     }
        
-    public TriplesMap extractAndReturnTriplesMap(
-            Repository repository, Resource triplesMapSubject,
-            Map<Resource, TriplesMap> triplesMapResources) {
+    public TriplesMap extractAndReturnTriplesMap(Repository repository,
+                                                 Resource triplesMapSubject,
+                                                 Map<Resource, TriplesMap> triplesMapResources) {
         log.debug("Extract TriplesMap subject : "
                 + triplesMapSubject.stringValue());
         TriplesMap result = triplesMapResources.get(triplesMapSubject);
@@ -73,9 +73,8 @@ public class TriplesMapExtractor {
         //SubjectMap subjectMap = extractSubjectMap(
         //rmlMappingGraph, triplesMapSubject, graphMaps, result);
         SubjectMapExtractor sbjMapExtractor = new SubjectMapExtractor();
-        SubjectMap subjectMap =
-                sbjMapExtractor.extractSubjectMap(
-                repository, triplesMapSubject, graphMap, result);
+        SubjectMap subjectMap = sbjMapExtractor.extractSubjectMap(
+                repository, triplesMapSubject, graphMap, result, triplesMapResources);
 
         try {
             result.setSubjectMap(subjectMap);

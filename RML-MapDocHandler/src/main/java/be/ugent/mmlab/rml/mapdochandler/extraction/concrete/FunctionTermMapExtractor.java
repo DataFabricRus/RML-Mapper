@@ -34,13 +34,14 @@ public class FunctionTermMapExtractor {
             LoggerFactory.getLogger(
                     FunctionTermMapExtractor.class.getSimpleName());
 
-    public Set<FunctionTermMap> processFunctionTermMap(
-            Repository repository, Resource object, Map<Resource,
-            TriplesMap> triplesMapResources, TriplesMap triplesMap,
-            PredicateObjectMap predicateObjectMap, GraphMap graphMap){
+    public Set<FunctionTermMap> processFunctionTermMap(Repository repository,
+                                                       Resource object,
+                                                       Map<Resource, TriplesMap> triplesMapResources,
+                                                       TriplesMap triplesMap,
+                                                       PredicateObjectMap predicateObjectMap,
+                                                       GraphMap graphMap){
         Set<FunctionTermMap> results = new HashSet<>();
-        FunctionTermMap result = null;
-        Value value = null;
+        FunctionTermMap result;
         log.debug("Extracting Function Term Map..");
 
         try {
