@@ -1,0 +1,59 @@
+# baseURI: http://datafabric.cc/uuid
+
+@prefix : <http://datafabric.cc/uuid#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fno: <https://w3id.org/function/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://datafabric.cc/uuid>
+  rdf:type owl:Ontology ;
+.
+:concatString
+  rdf:type fno:Function ;
+  dcterms:description "concatinates strings" ;
+  rdfs:label "string concatination" ;
+  fno:expects (
+      :valueParam
+      :nextValueParam
+    ) ;
+  fno:name "concatStrings" ;
+  fno:returns (
+      :stringOut
+    ) ;
+.
+:nextValueParam
+  rdf:type fno:Parameter ;
+  rdfs:label "input value" ;
+  fno:name "input value" ;
+  fno:predicate :nextValueParameter ;
+  fno:type xsd:string ;
+.
+:stringOut
+  rdf:type fno:Output ;
+  rdfs:label "output string" ;
+  fno:name "output string" ;
+  fno:predicate :stringOutput ;
+  fno:type xsd:string ;
+.
+:uuidFromString
+  rdf:type fno:Function ;
+  dcterms:description "converts a string into uppercase" ;
+  rdfs:label "genarate UUID from a string" ;
+  fno:expects (
+      :valueParam
+    ) ;
+  fno:name "uuidFromString" ;
+  fno:returns (
+      :stringOut
+    ) ;
+.
+:valueParam
+  rdf:type fno:Parameter ;
+  rdfs:label "input value" ;
+  fno:name "input value" ;
+  fno:predicate :valueParameter ;
+  fno:type xsd:string ;
+.

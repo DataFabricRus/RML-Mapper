@@ -1,0 +1,118 @@
+# baseURI: http://semweb.datasciencelab.be/ns/grel
+
+@prefix : <http://semweb.datasciencelab.be/ns/grel#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fno: <https://w3id.org/function/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://semweb.datasciencelab.be/ns/grel>
+  rdf:type owl:Ontology ;
+.
+:boolOut
+  rdf:type fno:Output ;
+  fno:name "output boolean" ;
+  fno:predicate :boolOutput ;
+  fno:type xsd:boolean ;
+  rdfs:label "output boolean" ;
+.
+:booleanMatch
+  rdf:type fno:Function ;
+  dcterms:description "Returns true the first input string contains the second input string." ;
+  fno:expects (
+      :valueParam
+      :regexParam
+    ) ;
+  fno:name "booleanMatch" ;
+  fno:returns (
+      :boolOut
+    ) ;
+  rdfs:label "boolean match" ;
+.
+:contains
+  rdf:type fno:Function ;
+  dcterms:description "Returns true the first input string contains the second input string." ;
+  fno:expects (
+      :valueParam
+      :substringParam
+    ) ;
+  fno:name "contains" ;
+  fno:returns (
+      :boolOut
+    ) ;
+  rdfs:label "contains" ;
+.
+:escape
+  rdf:type fno:Function ;
+  dcterms:description "Escapes a string into a certain mode, i.e., `html`, `xml`, `csv`, `url`, or `javascript`" ;
+  fno:expects (
+      :valueParam
+      :modeParam
+    ) ;
+  fno:name "escape" ;
+  fno:returns (
+      :stringOut
+    ) ;
+  rdfs:label "escape" ;
+.
+:isSet
+  rdf:type fno:Function ;
+  dcterms:description "Returns true if a certain input string is set." ;
+  fno:expects (
+      :valueParam
+    ) ;
+  fno:name "isSet" ;
+  fno:returns (
+      :boolOut
+    ) ;
+  rdfs:label "is set" ;
+.
+:modeParam
+  rdf:type fno:Parameter ;
+  fno:name "mode parameter" ;
+  fno:predicate :modeParameter ;
+  fno:type xsd:string ;
+  rdfs:label "mode parameter" ;
+.
+:regexParam
+  rdf:type fno:Parameter ;
+  fno:name "regular expression" ;
+  fno:predicate :regexParameter ;
+  fno:type xsd:string ;
+  rdfs:label "regular expression" ;
+.
+:stringOut
+  rdf:type fno:Output ;
+  fno:name "output string" ;
+  fno:predicate :stringOutput ;
+  fno:type xsd:string ;
+  rdfs:label "output string" ;
+.
+:substringParam
+  rdf:type fno:Parameter ;
+  fno:name "substring" ;
+  fno:predicate :subStringParameter ;
+  fno:type xsd:string ;
+  rdfs:label "substring" ;
+.
+:toUppercase
+  rdf:type fno:Function ;
+  dcterms:description "converts a string into uppercase" ;
+  fno:expects (
+      :valueParam
+    ) ;
+  fno:name "toUppercase" ;
+  fno:returns (
+      :stringOut
+    ) ;
+  rdfs:label "to uppercase" ;
+.
+:valueParam
+  rdf:type fno:Parameter ;
+  fno:name "inputValue" ;
+  fno:predicate :valueParameter ;
+  fno:type xsd:string ;
+  rdfs:label "input value" ;
+.

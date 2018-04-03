@@ -1,0 +1,153 @@
+# baseURI: https://w3id.org/datafabric.cc/ontologies/implementation
+# imports: http://datafabric.cc/sparqlservices
+# imports: http://datafabric.cc/uuid
+# imports: http://semweb.datasciencelab.be/ns/grel
+# imports: http://semweb.datasciencelab.be/ns/sfn
+# imports: https://w3id.org/datafabric.cc/ontologies/functionimpl
+
+@prefix : <https://w3id.org/datafabric.cc/ontologies/implementation#> .
+@prefix datafabric: <http://datafabric.cc/uuid#> .
+@prefix functionimpl: <https://w3id.org/datafabric.cc/ontologies/functionimpl#> .
+@prefix grel: <http://semweb.datasciencelab.be/ns/grel#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sfn: <http://semweb.datasciencelab.be/ns/sfn#> .
+@prefix sparqlservices: <http://datafabric.cc/sparqlservices#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sparqlservices:resolve
+  functionimpl:isImplementedBy :sparqlDymmyResolveImpl ;
+.
+datafabric:concatString
+  functionimpl:isImplementedBy :concatStringsImpl ;
+.
+datafabric:uuidFromString
+  functionimpl:isImplementedBy :uuidFromStringImpl ;
+.
+grel:booleanMatch
+  functionimpl:isImplementedBy :booleanMatchImpl ;
+.
+grel:contains
+  functionimpl:isImplementedBy :containsImpl ;
+.
+grel:escape
+  functionimpl:isImplementedBy :escapeImpl ;
+.
+grel:isSet
+  functionimpl:isImplementedBy :isSet ;
+.
+grel:toUppercase
+  functionimpl:isImplementedBy :toUppercase ;
+.
+sfn:jaccard
+  functionimpl:isImplementedBy :jaccardImpl ;
+.
+sfn:jaroWinkler
+  functionimpl:isImplementedBy :jaroWinklerImpl ;
+.
+sfn:levenshtein
+  functionimpl:isImplementedBy :levenshteinImpl ;
+.
+<https://w3id.org/datafabric.cc/ontologies/implementation>
+  rdf:type owl:Ontology ;
+  owl:imports <http://datafabric.cc/sparqlservices> ;
+  owl:imports <http://datafabric.cc/uuid> ;
+  owl:imports <http://semweb.datasciencelab.be/ns/grel> ;
+  owl:imports <http://semweb.datasciencelab.be/ns/sfn> ;
+  owl:imports <https://w3id.org/datafabric.cc/ontologies/functionimpl> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+:booleanMatchImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :grelLibrary ;
+.
+:concatStringsImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :datafabricFileLibrary ;
+.
+:containsImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :grelLibrary ;
+.
+:datafabricFileLibrary
+  rdf:type functionimpl:FunctionLibrary ;
+  functionimpl:hasNamespace "datafabric" ;
+  functionimpl:isInLanguage functionimpl:Clojure ;
+  functionimpl:libraryPath "script" ;
+.
+:datafabricInlineLibrary
+  rdf:type functionimpl:FunctionLibrary ;
+  functionimpl:hasNamespace "datafabric" ;
+  functionimpl:isInLanguage functionimpl:Clojure ;
+.
+:equalityImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :similarityLibrary ;
+.
+:escapeImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :grelLibrary ;
+.
+:grelLibrary
+  rdf:type functionimpl:FunctionLibrary ;
+  functionimpl:isInLanguage functionimpl:Java ;
+  functionimpl:libraryPath "GrelFunctions" ;
+  functionimpl:libraryType "application/java-archive" ;
+.
+:isSet
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :grelLibrary ;
+.
+:jaccardImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :similarityLibrary ;
+.
+:jaroImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :similarityLibrary ;
+.
+:jaroWinklerImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :similarityLibrary ;
+.
+:levenshteinImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :similarityLibrary ;
+.
+:ratcliffImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :similarityLibrary ;
+.
+:similarityImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :similarityLibrary ;
+.
+:similarityLibrary
+  rdf:type functionimpl:FunctionLibrary ;
+  functionimpl:isInLanguage functionimpl:Java ;
+  functionimpl:libraryPath "SimilarityFunctions" ;
+  functionimpl:libraryType "application/java-archive" ;
+.
+:sparqlDymmyResolveImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :sparqlServicesLibrary ;
+.
+:sparqlServicesLibrary
+  rdf:type functionimpl:FunctionLibrary ;
+  functionimpl:isInLanguage functionimpl:Java ;
+  functionimpl:libraryPath "DummyResolver" ;
+  functionimpl:libraryType "application/java-archive" ;
+.
+:toUppercase
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:isImplementedIn :grelLibrary ;
+.
+:uuidFromStringImpl
+  rdf:type functionimpl:FunctionImplementation ;
+  functionimpl:hasScript "(defn uuidFromString [data] (.toString (java.util.UUID/nameUUIDFromBytes (.getBytes data))))" ;
+  functionimpl:isImplementedIn :datafabricInlineLibrary ;
+.
+<https://w3id.org/function/ontology#Parameter>
+  rdfs:subClassOf owl:Thing ;
+.
