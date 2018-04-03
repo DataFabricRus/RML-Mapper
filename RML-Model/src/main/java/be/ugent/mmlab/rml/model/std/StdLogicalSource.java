@@ -1,0 +1,177 @@
+package be.ugent.mmlab.rml.model.std;
+
+import be.ugent.mmlab.rml.model.Source;
+import be.ugent.mmlab.rml.model.LogicalSource;
+import be.ugent.mmlab.rml.model.ReferenceFormulation;
+import be.ugent.mmlab.rml.vocabularies.QLVocabulary.QLTerm;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.IRI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+/**
+ *  RML - Model : Logical Source Implementation
+ * 
+ * @author mielvandersande, andimou
+ * 
+ */
+public class StdLogicalSource implements LogicalSource {
+
+    //Log
+    private static final Logger log = 
+            LoggerFactory.getLogger(
+            StdLogicalSource.class.getSimpleName());
+    
+    private String iterator, query, table;
+    private QLTerm referenceFormulation = QLTerm.SQL_CLASS;
+    private Source source;
+    private ReferenceFormulation dialect = null; //custom reference formulation
+
+    /**
+     *
+     * @param inputSource
+     * @param referenceFormulation
+     * 
+     * Constructor for tabular-structured data 
+     * where the Iteration is known
+     * and the source is described by a Resource.
+     * 
+     */
+    public StdLogicalSource(Source inputSource, QLTerm referenceFormulation) {
+        setReferenceFormulation(referenceFormulation);
+        setSource(inputSource);
+    }
+
+    /**
+     *
+     * @param iterator
+     * @param inputSource
+     * @param referenceFormulation
+     * 
+     */
+    public StdLogicalSource(String iterator, Source inputSource, QLTerm referenceFormulation) {
+        setIterator(iterator);
+        setSource(inputSource);
+        setReferenceFormulation(referenceFormulation);
+    }
+    
+    public StdLogicalSource(String iterator, Source inputSource, 
+            QLTerm referenceFormulation, ReferenceFormulation dialect) {
+        setIterator(iterator);
+        setSource(inputSource);
+        setReferenceFormulation(referenceFormulation);
+        setCustomReferenceFormulation(dialect);
+    }
+    
+    public StdLogicalSource(String iterator, Source inputSource, String query,
+            QLTerm referenceFormulation, ReferenceFormulation dialect) {
+        setIterator(iterator);
+        setSource(inputSource);
+        setQuery(query);
+        setReferenceFormulation(referenceFormulation);
+        setCustomReferenceFormulation(dialect);
+    }
+    
+    public StdLogicalSource(String iterator, Source inputSource, String query,
+            String table, QLTerm referenceFormulation, ReferenceFormulation dialect) {
+        setIterator(iterator);
+        setSource(inputSource);
+        setQuery(query);
+        setReferenceFormulation(referenceFormulation);
+        setCustomReferenceFormulation(dialect);
+        setTableName(table);
+    }
+
+    @Override
+    public String getIterator() {
+        return iterator;
+    }
+
+    @Override
+    public final void setIterator(String iterator) {
+        this.iterator = iterator;
+    }
+    
+    @Override
+    public String getQuery(){
+        return this.query;
+    }
+    
+    @Override
+    public final void setQuery(String query){
+        this.query = query;
+    }
+    
+    @Override
+    public String getTableName(){
+        return this.table;
+    }
+    
+    @Override
+    public final void setTableName(String table) {
+        this.table = table;
+    }
+
+    @Override
+    public QLTerm getReferenceFormulation() {
+        return referenceFormulation;
+    }
+
+    @Override
+    public final void setReferenceFormulation(QLTerm referenceFormulation) {
+        this.referenceFormulation = referenceFormulation;
+    }
+    
+    @Override
+    public ReferenceFormulation getCustomReferenceFormulation() {
+        return dialect;
+    }
+
+    @Override
+    public final void setCustomReferenceFormulation(ReferenceFormulation dialect) {
+        this.dialect = dialect;
+    }
+
+    @Override
+    public Source getSource() {
+        return source;
+    }
+
+    @Override
+    public final void setSource(Source inputSource) {
+        this.source = inputSource;
+    }
+    
+    @Override
+    public String getSourceType(Source source) {
+        log.info("Input source " + source.getClass().getSimpleName());
+        if (source.getClass().getSimpleName().equals("String")) {
+            return Literal.class.getSimpleName();
+        } //object input
+        else {
+            log.info("Input source " + source.getClass().getSimpleName());
+            return IRI.class.getSimpleName();
+        }
+    }
+
+    /**
+     *
+     * @return String
+     * 
+     */
+    @Override
+    public String toString() {
+        if (source != null) {
+            return "[StdLogicalSource : iterator = " + iterator
+                    + "; source " + source
+                    + "; referenceFormulation = " + referenceFormulation
+                    + "]";
+        } else {
+            return "[StdLogicalSource : Iterator = " + iterator
+                    + "; Input Source " + source
+                    + "; Reference Formulation = " + referenceFormulation
+                    + "]";
+        }
+    }
+}
