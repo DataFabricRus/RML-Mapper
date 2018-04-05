@@ -1,7 +1,6 @@
 package be.ugent.mmlab.rml.model.RDFTerm;
 
 import be.ugent.mmlab.rml.model.TriplesMap;
-import be.ugent.mmlab.rml.model.std.StdFunctionTermMap;
 import be.ugent.mmlab.rml.model.std.StdObjectMap;
 import be.ugent.mmlab.rml.model.termMap.ReferenceMap;
 import be.ugent.mmlab.rml.model.termMap.TemplateMap;
@@ -108,26 +107,26 @@ public abstract class AbstractTermMap implements TermMap {
                         dataType != null || 
                         getLanguageTag() != null || 
                         constantValue instanceof Literal)) {
-                this.termType = TermType.LITERAL;
+                this.setTermType(TermType.LITERAL);
                 log.debug("No term type specified : use Literal by default.");
             } else
             if((this instanceof StdObjectMap)
                     && (getReferenceMap() == null)
                     && (constantValue == null)
                     && (stringTemplate == null)){
-                this.termType = TermType.LITERAL;
+                this.setTermType(TermType.LITERAL);
             } else {
                 // otherwise its term type is IRI
-                this.termType = TermType.IRI;
+                this.setTermType(TermType.IRI);
                 log.debug("No term type specified : use IRI by default.");
             }
 
         } else {
-            this.termType = checkTermType(termType);
+            this.setTermType(checkTermType(termType));
         }
     }
 
-        private TermType checkTermType(IRI termType) {
+        protected TermType checkTermType(IRI termType) {
         // Its value MUST be an IRI
             /*if (!RDFDataValidator.isValidURI(termType.stringValue())) {
                 log.error("Data Error"
@@ -335,7 +334,7 @@ public abstract class AbstractTermMap implements TermMap {
                 return TermMapType.REFERENCE_VALUED;
             } else if (stringTemplate != null) {
                 return TermMapType.TEMPLATE_VALUED;
-            } else if (termType == TermType.BLANK_NODE) {
+            } else if (getTermType() == TermType.BLANK_NODE) {
                 return TermMapType.NO_VALUE_FOR_BNODE;
             }
             return null;
@@ -363,7 +362,7 @@ public abstract class AbstractTermMap implements TermMap {
 
         @Override
         public boolean isTypeable() {
-            return (termType == TermType.LITERAL) && (languageTag == null);
+            return (getTermType() == TermType.LITERAL) && (languageTag == null);
         }
 
         /**
@@ -435,4 +434,7 @@ public abstract class AbstractTermMap implements TermMap {
     }
 
 
+    public void setTermType(TermType termType) {
+        this.termType = termType;
+    }
 }

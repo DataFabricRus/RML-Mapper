@@ -16,7 +16,9 @@ import be.ugent.mmlab.rml.model.RDFTerm.ReferencingObjectMap;
 import be.ugent.mmlab.rml.model.TriplesMap;
 import be.ugent.mmlab.rml.model.dataset.RMLDataset;
 import be.ugent.mmlab.rml.model.std.StdConditionObjectMap;
+
 import static be.ugent.mmlab.rml.model.RDFTerm.TermType.BLANK_NODE;
+
 import be.ugent.mmlab.rml.performer.ConditionalJoinRMLPerformer;
 import be.ugent.mmlab.rml.performer.JoinRMLPerformer;
 import be.ugent.mmlab.rml.performer.RMLPerformer;
@@ -26,6 +28,7 @@ import be.ugent.mmlab.rml.processor.concrete.ConcreteTermMapFactory;
 import be.ugent.mmlab.rml.processor.concrete.TermMapProcessorFactory;
 import be.ugent.mmlab.rml.vocabularies.FnVocabulary;
 import be.ugent.mmlab.rml.vocabularies.QLVocabulary;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.IRI;
@@ -118,9 +122,9 @@ public class StdObjectMapProcessor implements ObjectMapProcessor {
         }
     }
 
-    private void addTriples(RMLDataset dataset, Resource subject, IRI predicate, List<Value> objects, GraphMap graphMap){
+    private void addTriples(RMLDataset dataset, Resource subject, IRI predicate, List<Value> objects, GraphMap graphMap) {
         Resource graphResource = null;
-        if(graphMap != null)
+        if (graphMap != null)
             graphResource = (Resource) graphMap.getConstantValue();
 
         for (Value object : objects) {
@@ -129,7 +133,7 @@ public class StdObjectMapProcessor implements ObjectMapProcessor {
                     //TODO: This control is redundant, ignore it if needed
                     List<Statement> triples =
                             dataset.tuplePattern(subject, predicate, object);
-                    if(triples.size() == 0){
+                    if (triples.size() == 0) {
                         dataset.add(subject, predicate, object, graphResource);
                     }
                 } else {
@@ -321,14 +325,14 @@ public class StdObjectMapProcessor implements ObjectMapProcessor {
                                                  Object node,
                                                  TriplesMap map,
                                                  String[] exeTriplesMap,
-                                                 GraphMap graphMap){
+                                                 GraphMap graphMap) {
 
-        if(functionTermMaps != null){
+        if (functionTermMaps != null) {
             log.debug("Processing Function Term Map");
         }
 
-        for(FunctionTermMap functionTermMap : functionTermMaps){
-            if(graphMap == null){
+        for (FunctionTermMap functionTermMap : functionTermMaps) {
+            if (graphMap == null) {
                 graphMap = functionTermMap.getGraphMap();
             }
 
@@ -339,13 +343,20 @@ public class StdObjectMapProcessor implements ObjectMapProcessor {
 
             List<Value> values = this.termMapProcessor.processFunctionTermMap(
                     functionTermMap, node, function, parameters);
+
+            List<Value> valueList = new ArrayList<>();
+
+            for (Value value : values) {
+                valueList = this.termMapProcessor.applyTermType(value.stringValue(), valueList, functionTermMap);
+            }
+
             log.debug("values are " + values);
-            addTriples(dataset,subject,predicate,values,graphMap);
+            addTriples(dataset, subject, predicate, valueList, graphMap);
         }
     }
 
-    public static Map<String,String> retrieveParameters(Object node, TriplesMap functionTriplesMap){
-        Map<String,String> parameters = new HashMap<String, String>();
+    public static Map<String, String> retrieveParameters(Object node, TriplesMap functionTriplesMap) {
+        Map<String, String> parameters = new HashMap<String, String>();
         TermMapProcessorFactory factory = new ConcreteTermMapFactory();
         TermMapProcessor termMapProcessor =
                 factory.create(functionTriplesMap.getLogicalSource().getReferenceFormulation());
@@ -353,29 +364,29 @@ public class StdObjectMapProcessor implements ObjectMapProcessor {
         String referenceValue;
         String constantValue;
         Set<PredicateObjectMap> poms = functionTriplesMap.getPredicateObjectMaps();
-        for(PredicateObjectMap pom : poms) {
+        for (PredicateObjectMap pom : poms) {
             Value property = pom.getPredicateMaps().iterator().next().getConstantValue();
             String executes = FnVocabulary.FNO_NAMESPACE + FnVocabulary.FnTerm.EXECUTES;
-            if(!property.stringValue().equals(executes)){
+            if (!property.stringValue().equals(executes)) {
                 Value parameter = pom.getPredicateMaps().iterator().next().getConstantValue();
                 try {
                     referenceValue = pom.getObjectMaps().iterator().next().getReferenceMap().getReference();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     referenceValue = null;
                     System.err.println("No reference");
                 }
                 try {
                     constantValue = pom.getObjectMaps().iterator().next().getConstantValue().stringValue();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     constantValue = null;
                     System.err.println("No constant value");
                 }
-                if(referenceValue != null) {
+                if (referenceValue != null) {
                     List<String> value = termMapProcessor.extractValueFromNode(node, referenceValue);
-                    if(value.size() != 0) {
+                    if (value.size() != 0) {
                         parameters.put(parameter.stringValue(), value.get(0));
                     }
-                } else if(constantValue != null) {
+                } else if (constantValue != null) {
                     parameters.put(parameter.stringValue(), constantValue);
                 } else {
                     // no value is present for this parameter, enter null

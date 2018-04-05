@@ -1,11 +1,13 @@
 package be.ugent.mmlab.rml.mapdochandler.extraction.concrete;
 
+import be.ugent.mmlab.rml.extraction.TermExtractor;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import be.ugent.mmlab.rml.model.RDFTerm.*;
 import be.ugent.mmlab.rml.model.TriplesMap;
 import be.ugent.mmlab.rml.model.std.StdFunctionTermMap;
 import be.ugent.mmlab.rml.model.termMap.ReferenceMap;
 import be.ugent.mmlab.rml.vocabularies.FnVocabulary;
+import be.ugent.mmlab.rml.vocabularies.R2RMLVocabulary;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
@@ -39,7 +41,7 @@ public class FunctionTermMapExtractor {
                                                        Map<Resource, TriplesMap> triplesMapResources,
                                                        TriplesMap triplesMap,
                                                        PredicateObjectMap predicateObjectMap,
-                                                       GraphMap graphMap){
+                                                       GraphMap graphMap) {
         Set<FunctionTermMap> results = new HashSet<>();
         FunctionTermMap result;
         log.debug("Extracting Function Term Map..");
@@ -54,7 +56,7 @@ public class FunctionTermMapExtractor {
             //Extract additional properties for Function Term Map
             IRI functionValue = (IRI) extractValueFromTermMap(repository, object, pred, triplesMap);
 
-            if(functionValue != null) {
+            if (functionValue != null) {
                 TriplesMapExtractor triplesMapExtractor = new TriplesMapExtractor();
                 TriplesMap functionTriplesMap =
                         triplesMapExtractor.extractAndReturnTriplesMap(repository, functionValue, triplesMapResources);
@@ -62,20 +64,32 @@ public class FunctionTermMapExtractor {
                 function = getFunction(functionTriplesMap);
                 parameters = getParameters(functionTriplesMap);
 
-                Map<String,String> parametersRefs = getFunRefPairs(functionTriplesMap);
+                Map<String, String> parametersRefs = getFunRefPairs(functionTriplesMap);
 
                 Value constantValue = null;
                 IRI dataType = null;
                 String languageTag = null;
                 String stringTemplate = null;
-                IRI termType = null;
+                IRI termType = (IRI) TermExtractor.extractValueFromTermMap(repository, object,
+                        R2RMLVocabulary.R2RMLTerm.TERM_TYPE, triplesMap);;
                 //URI termType = new URIImpl(R2RMLVocabulary.R2RMLTerm.LITERAL.toString());
                 String inverseExpression = null;
                 ReferenceMap referenceValue = null;
                 log.debug("Function Object Map extracted.");
                 result = new StdFunctionTermMap(
-                        constantValue, dataType, languageTag, stringTemplate, termType, inverseExpression, referenceValue,
-                        predicateObjectMap, graphMap, functionTriplesMap, function, parameters, parametersRefs);
+                        constantValue,
+                        dataType,
+                        languageTag,
+                        stringTemplate,
+                        termType,
+                        inverseExpression,
+                        referenceValue,
+                        predicateObjectMap,
+                        graphMap,
+                        functionTriplesMap,
+                        function,
+                        parameters,
+                        parametersRefs);
                 results.add(result);
             }
 
@@ -87,16 +101,16 @@ public class FunctionTermMapExtractor {
 
     }
 
-    private IRI getFunction(TriplesMap functionTriplesMap){
+    private IRI getFunction(TriplesMap functionTriplesMap) {
         Set<PredicateObjectMap> predObjMaps = functionTriplesMap.getPredicateObjectMaps();
         IRI funPredicateURI = null;
 
-        for(PredicateObjectMap predicateObjectMap : predObjMaps){
+        for (PredicateObjectMap predicateObjectMap : predObjMaps) {
             log.debug("Retrieving the function...");
             PredicateMap funPredicate = predicateObjectMap.getPredicateMaps().iterator().next();
             Object executes = FnVocabulary.FNO_NAMESPACE + FnVocabulary.FnTerm.EXECUTES;
             String funPredicateValue = funPredicate.getConstantValue().stringValue();
-            if(funPredicateValue.equals(executes)){
+            if (funPredicateValue.equals(executes)) {
                 String funObjectValue = predicateObjectMap.getObjectMaps().iterator().next().getConstantValue().stringValue();
                 SimpleValueFactory vf = SimpleValueFactory.getInstance();
                 funPredicateURI = vf.createIRI(funObjectValue);
@@ -105,12 +119,12 @@ public class FunctionTermMapExtractor {
         return funPredicateURI;
     }
 
-    private Map<String,String> getFunRefPairs(TriplesMap functionTriplesMap){
-        Map<String,String> parameters = new HashMap<String,String>();
+    private Map<String, String> getFunRefPairs(TriplesMap functionTriplesMap) {
+        Map<String, String> parameters = new HashMap<String, String>();
 
         Set<PredicateObjectMap> predObjMaps = functionTriplesMap.getPredicateObjectMaps();
 
-        for(PredicateObjectMap predicateObjectMap : predObjMaps) {
+        for (PredicateObjectMap predicateObjectMap : predObjMaps) {
             String parameterValue;
             ObjectMap parameter;
             PredicateMap funPredicate = predicateObjectMap.getPredicateMaps().iterator().next();
@@ -118,13 +132,13 @@ public class FunctionTermMapExtractor {
 
             String executes = FnVocabulary.FNO_NAMESPACE + FnVocabulary.FnTerm.EXECUTES;
 
-            if(!funPredicateValue.equals(executes)) {
+            if (!funPredicateValue.equals(executes)) {
                 parameter = predicateObjectMap.getObjectMaps().iterator().next();
-                if(parameter.getReferenceMap() != null)
+                if (parameter.getReferenceMap() != null)
                     parameterValue = parameter.getReferenceMap().getReference();
                 else
                     parameterValue = parameter.getConstantValue().stringValue();
-                if(funPredicateValue != null && parameterValue != null)
+                if (funPredicateValue != null && parameterValue != null)
                     parameters.put(funPredicateValue, parameterValue);
             }
         }
@@ -132,19 +146,19 @@ public class FunctionTermMapExtractor {
     }
 
 
-    private Set<IRI> getParameters(TriplesMap functionTriplesMap){
+    private Set<IRI> getParameters(TriplesMap functionTriplesMap) {
         Set<PredicateObjectMap> predObjMaps = functionTriplesMap.getPredicateObjectMaps();
         Set<IRI> parameters = new HashSet<IRI>();
         IRI parameter = null;
 
-        for(PredicateObjectMap predicateObjectMap : predObjMaps){
+        for (PredicateObjectMap predicateObjectMap : predObjMaps) {
             log.debug("Retrieving the function...");
             PredicateMap funPredicate = predicateObjectMap.getPredicateMaps().iterator().next();
 
             Object executes = FnVocabulary.FNO_NAMESPACE + FnVocabulary.FnTerm.EXECUTES;
             String funPredicateValue = funPredicate.getConstantValue().stringValue();
 
-            if(!funPredicateValue.equals(executes)){
+            if (!funPredicateValue.equals(executes)) {
                 ValueFactory vf = SimpleValueFactory.getInstance();
                 parameter = vf.createIRI(funPredicateValue);
                 parameters.add(parameter);

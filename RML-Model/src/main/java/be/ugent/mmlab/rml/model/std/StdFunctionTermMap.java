@@ -107,6 +107,15 @@ public class StdFunctionTermMap extends AbstractTermMap implements FunctionTermM
             this.graphMaps.addAll(graphMaps);
     }
 
+    protected void setTermType(IRI termType, IRI dataType) {
+        if (termType == null) {
+            setTermType(TermType.LITERAL);
+
+        } else {
+            setTermType(checkTermType(termType));
+        }
+    }
+
 
 
 }
