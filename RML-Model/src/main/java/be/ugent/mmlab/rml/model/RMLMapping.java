@@ -9,21 +9,20 @@ import java.util.HashSet;
  *
  * Represents a set of TriplesMap objects which can compare
  * with a mapping of a all tables of a database and files in different sources.
- * 
+ *
  * based on R2RMLMapping class in https://github.com/antidot/db2triples
- * 
+ *
  ****************************************************************************/
 public class RMLMapping {
 
     private Collection<TriplesMap> triplesMaps;
 
     /**
-     *
      * @param triplesMaps
      */
     public RMLMapping(Collection<TriplesMap> triplesMaps) {
         super();
-        this.triplesMaps = new HashSet<TriplesMap>();
+        this.triplesMaps = new HashSet<>();
         this.triplesMaps.addAll(triplesMaps);
     }
 
@@ -33,4 +32,5 @@ public class RMLMapping {
     public Collection<TriplesMap> getTriplesMaps() {
         return triplesMaps;
     }
+
 }

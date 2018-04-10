@@ -19,9 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class AbstractInputProcessor implements SourceProcessor {
     
     // Log
-    private static final Logger log = 
-            LoggerFactory.getLogger(
-            AbstractInputProcessor.class.getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(AbstractInputProcessor.class.getSimpleName());
     
     public InputStream getInputStream(TriplesMap triplesMap) {
         

@@ -1,41 +1,39 @@
 package be.ugent.mmlab.rml.mapdochandler.extraction;
 
 import be.ugent.mmlab.rml.model.TriplesMap;
+
 import java.util.Map;
+
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.repository.Repository;
 
 /**
  * *************************************************************************
- *
+ * <p>
  * RML - Mapping Document Handler : RMLMappingExtractor
  *
- *
  * @author andimou
- *
- ***************************************************************************
+ * <p>
+ * **************************************************************************
  */
 public interface RMLMappingExtractor {
-    
+
     /**
-     *
-     * @param rmlMappingGraph
-     * @return Repository
+     * @param repository
+     * @return repository
      */
-    public Repository replaceShortcuts(Repository repository);
-    
+    Repository replaceShortcuts(Repository repository);
+
     /**
-     *
-     * @param rmlMappingGraph
-     * @return Repository
+     * @param repository
+     * @return repository
      */
-    public Repository skolemizeStatements(Repository repository);
-    
+    Repository skolemizeStatements(Repository repository);
+
     /**
-     *
-     * @param rmlMappingGraph
-     * @return Map<Resource, TriplesMap>
+     * @param repository
+     * @return map of Resource on TriplesMap
      */
-    public Map<Resource, TriplesMap> extractTriplesMapResources(Repository repository);
-        
+    Map<Resource, TriplesMap> extractTriplesMapResources(Repository repository);
+
 }

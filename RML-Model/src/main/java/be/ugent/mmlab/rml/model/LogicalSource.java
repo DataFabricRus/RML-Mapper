@@ -4,107 +4,89 @@ import be.ugent.mmlab.rml.vocabularies.QLVocabulary.QLTerm;
 
 /**
  * *************************************************************************
- *
+ * <p>
  * RML - Model : LogicalSource Interface
  *
- *
  * @author andimou
- *
- ***************************************************************************
+ * <p>
+ * **************************************************************************
  */
 public interface LogicalSource {
 
     /**
-     * 
      * Every logical source has an Iterator.
      * The Iterator can be skipped when the data have tabular structure
      * and the iteration is implied that it is per row.
-     * 
-     * @return String
-     * 
-     */
-    public String getIterator();
-    
-    /**
      *
+     * @return String
+     */
+    String getIterator();
+
+    /**
      * @param iterator
      */
-    public void setIterator(String iterator);
-    
+    void setIterator(String iterator);
+
     /**
-     *
      * @return
      */
-    public String getTableName();
-    
+    String getTableName();
+
     /**
-     *
      * @param table
      */
-    public void setTableName(String table);
-    
+    void setTableName(String table);
+
     /**
-     * 
      * Every Logical Source has an Input Source
      * where the data reside.
      *
      * @return InputSource
      */
-    public Source getSource();
-    
-    /**
-     *
-     * @param inputSource
-     */
-    public void setSource(Source source);
+    Source getSource();
 
     /**
-     * 
-     * Every Logical Source has a Reference Formulation 
+     * @param source
+     */
+    void setSource(Source source);
+
+    /**
+     * Every Logical Source has a Reference Formulation
      * that specifies the grammar to refer to the input data.
-     * 
+     *
      * @return QLVocabulary.QLTerm
-     * 
      */
-    public QLTerm getReferenceFormulation();
-    
+    QLTerm getReferenceFormulation();
+
     /**
-     *
      * @param referenceFormulation
-     * 
      */
-    public void setReferenceFormulation(QLTerm referenceFormulation);
-    
+    void setReferenceFormulation(QLTerm referenceFormulation);
+
     /**
-     *
      * @return
      */
-    public ReferenceFormulation getCustomReferenceFormulation();
-    
+    ReferenceFormulation getCustomReferenceFormulation();
+
     /**
-     *
-     * @param referenceFormulation
-     * 
+     * @param dialect
      */
-    public void setCustomReferenceFormulation(ReferenceFormulation dialect);
-    
+    void setCustomReferenceFormulation(ReferenceFormulation dialect);
+
     /**
-     *
-     * @param inputSource
+     * @param source
      * @return
      */
-    public String getSourceType(Source source);
-    
+    String getSourceType(Source source);
+
     /**
-     *
      * @return
      */
-    public String getQuery();
-    
+    String getQuery();
+
     /**
-     *
      * @param query
      */
-    public void setQuery(String query);
-    
+    void setQuery(String query);
+
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
@@ -17,38 +18,34 @@ import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
 /**
  * *************************************************************************
- *
+ * <p>
  * RML - Mapping Document Handler : RMLDocRetrieval
  *
- *
  * @author andimou
- *
- ***************************************************************************
+ * <p>
+ * **************************************************************************
  */
 public class RMLDocRetrieval {
-    
+
     // Log
-    static final Logger log =
-            LoggerFactory.getLogger(
-            RMLDocRetrieval.class.getSimpleName());
-    
+    static final Logger log = LoggerFactory.getLogger(RMLDocRetrieval.class.getSimpleName());
+
     /**
-     *
      * @param fileToRMLFile
      * @param format
      * @return
      */
     public Repository getMappingDoc(String fileToRMLFile, RDFFormat format) {
         Repository repo = new SailRepository(new MemoryStore());
+        RepositoryConnection con = null;
         try {
             //RML document is a URI
             repo.initialize();
-            RepositoryConnection con = repo.getConnection();
+            con = repo.getConnection();
 
             if (!isLocalFile(fileToRMLFile)) {
                 try {
-                    log.info("Mapping Document "
-                            + fileToRMLFile + " loaded from URI.");
+                    log.info("Mapping Document {} loaded from URI", fileToRMLFile);
                     HttpURLConnection httpCon = (HttpURLConnection) new URL(fileToRMLFile).openConnection();
                     httpCon.setRequestMethod("HEAD");
                     if (httpCon.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -62,49 +59,53 @@ public class RMLDocRetrieval {
                         }
                     }
                 } catch (MalformedURLException ex) {
-                    log.error("MalformedURLException " + ex);
+                    log.error("MalformedURLException", ex);
                 } catch (IOException ex) {
-                    log.error("IOException " + ex);
+                    log.error("IOException", ex);
                 }
             } else {
                 try {
                     con.add(new File(fileToRMLFile), null, format);
                     //rmlMappingGraph.loadDataFromFile(fileToRMLFile, RDFFormat.TURTLE);
                 } catch (RepositoryException ex) {
-                    log.error("RepositoryException " + ex);
+                    log.error("RepositoryException", ex);
                 } catch (IOException ex) {
-                    log.error("IOException " + ex);
+                    log.error("IOException", ex);
                 } catch (RDFParseException ex) {
-                    log.error("RDFParseException " + ex);
+                    log.error("RDFParseException", ex);
                 }
             }
             long size = con.size();
-            log.debug("Number of RML triples in the repository "
-                    + fileToRMLFile + " : " + size + " from local file");
-            if(con.size() == 0)
+            log.debug("Number of RML triples in the repository {} : {} from local file", fileToRMLFile, size);
+            if (con.size() == 0) {
                 return null;
-            con.close();
+            }
         } catch (RepositoryException ex) {
-            log.error("RepositoryException " + ex);
-        } 
+            log.error("RepositoryException", ex);
+        } finally {
+            if (con != null) {
+                con.close();
+            }
+        }
         return repo;
     }
-    
+
     /**
-     *
      * @param source
      * @return
      */
-    public static boolean isLocalFile(String source) {
+    private static boolean isLocalFile(String source) {
         try {
             //TODO: Find a better way to check for file:/
-            if(source.startsWith("file:/"))
+            if (source.startsWith("file:/")) {
                 return true;
-            new URL(source);
-            return false;
+            } else {
+                new URL(source);
+                return false;
+            }
         } catch (MalformedURLException e) {
             return true;
         }
     }
-    
+
 }

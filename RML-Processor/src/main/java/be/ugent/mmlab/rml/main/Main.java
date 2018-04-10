@@ -7,8 +7,12 @@ import be.ugent.mmlab.rml.core.StdMetadataRMLEngine;
 import be.ugent.mmlab.rml.mapdochandler.extraction.std.StdRMLMappingFactory;
 import be.ugent.mmlab.rml.mapdochandler.retrieval.RMLDocRetrieval;
 import be.ugent.mmlab.rml.model.RMLMapping;
+
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.BasicConfigurator;
 import org.eclipse.rdf4j.repository.Repository;
@@ -23,21 +27,21 @@ import org.slf4j.LoggerFactory;
  */
 public class Main {
     // Log
-    static Logger log = LoggerFactory.getLogger(
-            Main.class.getPackage().toString());
+    static Logger log = LoggerFactory.getLogger(Main.class.getPackage().toString());
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        String map_doc = null, triplesMap ;
+
+        String map_doc = null;
+        String triplesMap;
         String[] exeTriplesMap = null;
         Map<String, String> parameters = null;
         BasicConfigurator.configure();
         CommandLine commandLine;
         StdRMLMappingFactory mappingFactory = new StdRMLMappingFactory();
-        
+
         log.info("=================================================");
         log.info("RML Processor");
         log.info("=================================================");
@@ -46,8 +50,8 @@ public class Main {
         try {
             commandLine = RMLConfiguration.parseArguments(args);
             String outputFile = null, outputFormat = "turtle";
-            String graphName = "", metadataVocab = null, metadataLevel = "None", 
-                    metadataFormat = null, baseIRI= null;
+            String graphName = "", metadataVocab = null, metadataLevel = "None",
+                    metadataFormat = null, baseIRI = null;
 
             if (commandLine.hasOption("h")) {
                 RMLConfiguration.displayHelp();
@@ -70,80 +74,77 @@ public class Main {
             if (commandLine.hasOption("m")) {
                 map_doc = commandLine.getOptionValue("m", null);
             }
-            
+
             if (commandLine.hasOption("md")) {
                 metadataVocab = commandLine.getOptionValue("md", null);
             }
-            
+
             if (commandLine.hasOption("mdl")) {
                 metadataLevel = commandLine.getOptionValue("mdl", null);
             }
-            
+
             if (commandLine.hasOption("mdf")) {
                 metadataFormat = commandLine.getOptionValue("mdf", null);
             }
-            
+
             log.info("========================================");
             log.info("Retrieving the RML Mapping Document...");
             log.info("========================================");
             RMLDocRetrieval mapDocRetrieval = new RMLDocRetrieval();
-            Repository repository = 
-                    mapDocRetrieval.getMappingDoc(map_doc, RDFFormat.TURTLE);
-            
-            if(repository == null){
+            Repository repository = mapDocRetrieval.getMappingDoc(map_doc, RDFFormat.TURTLE);
+
+            if (repository == null) {
                 log.debug("Problem retrieving the RML Mapping Document");
                 System.exit(1);
             }
-            
+
             log.info("========================================");
             log.info("Extracting the RML Mapping Definitions..");
             log.info("========================================");
             RMLMapping mapping = mappingFactory.extractRMLMapping(repository);
-            
+
             log.info("========================================");
             log.info("Executing the RML Mapping..");
             log.info("========================================");
-            
+
             log.debug("Generation Execution plan...");
             if (commandLine.hasOption("tm")) {
                 triplesMap = commandLine.getOptionValue("tm", null);
-                if(triplesMap != null)
-                    exeTriplesMap = 
-                            RMLConfiguration.processTriplesMap(triplesMap,map_doc, baseIRI);
+                if (triplesMap != null)
+                    exeTriplesMap =
+                            RMLConfiguration.processTriplesMap(triplesMap, map_doc, baseIRI);
             }
-            
-            if(metadataLevel.equals("None") && metadataFormat == null
-                    && (metadataVocab == null || !metadataVocab.contains("co"))){
+
+            if (metadataLevel.equals("None") && metadataFormat == null
+                    && (metadataVocab == null || !metadataVocab.contains("co"))) {
                 log.debug("Mapping without metadata...");
                 RMLEngine engine = new StdRMLEngine(outputFile);
-                engine.run(mapping, outputFile, outputFormat, 
+                engine.run(mapping, outputFile, outputFormat,
                         graphName, parameters, exeTriplesMap,
                         null, null, null);
-            }
-            else {
+            } else {
                 log.debug("Mapping with metadata...");
                 StdMetadataRMLEngine engine = new StdMetadataRMLEngine(outputFile);
-                engine.run(mapping, outputFile, outputFormat, 
-                        graphName, parameters, exeTriplesMap, 
+                engine.run(mapping, outputFile, outputFormat,
+                        graphName, parameters, exeTriplesMap,
                         metadataLevel, metadataFormat, metadataVocab);
             }
 
             System.exit(0);
-            
+
         } catch (Exception ex) {
-            System.exit(1);
-            log.error("Exception " + ex);
+            log.error("Exception", ex);
             RMLConfiguration.displayHelp();
-        } 
+            System.exit(1);
+        }
 
     }
-       
+
     /**
-     *
      * @param commandLine
      * @return
      */
-    public static Map<String, String> retrieveParameters(CommandLine commandLine) {
+    private static Map<String, String> retrieveParameters(CommandLine commandLine) {
         Map<String, String> parameters = new HashMap<String, String>();
         String[] parameterKeyValue;
 
