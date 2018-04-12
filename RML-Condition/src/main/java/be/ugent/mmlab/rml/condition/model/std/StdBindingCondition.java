@@ -18,8 +18,7 @@ public class StdBindingCondition extends StdCondition implements BindingConditio
     private String variable;
     
     // Log
-    private static final Logger log = 
-            LogManager.getLogger(StdBindingCondition.class.getSimpleName());
+    private static final Logger log = LogManager.getLogger(StdBindingCondition.class.getSimpleName());
     
     /**
      *

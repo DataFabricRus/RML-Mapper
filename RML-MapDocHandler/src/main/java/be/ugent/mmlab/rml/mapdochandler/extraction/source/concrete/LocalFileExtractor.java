@@ -23,25 +23,19 @@ import org.eclipse.rdf4j.repository.Repository;
 public class LocalFileExtractor extends StdSourceExtractor {
     
     // Log
-    private static final Logger log = 
-            LoggerFactory.getLogger(
-            LocalFileExtractor.class.getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(LocalFileExtractor.class.getSimpleName());
     
     //TODO: Change extractInput to Value instead of Resource
-    public Set<Source> extractInput(Repository repository, String source) {
-        Set<Source> inputSources = new HashSet<Source>();
-        
+    public Set<Source> extractInput(String source) {
+        Set<Source> inputSources = new HashSet<>();
         inputSources.add(new StdLocalFileSource(source, source));
-        
         return inputSources;
     }
 
     @Override
     public Set<Source> extractSources(Repository repository, Value value) {
-        Set<Source> inputSources = new HashSet<Source>();
-        
+        Set<Source> inputSources = new HashSet<>();
         inputSources.add(new StdLocalFileSource(value.stringValue(), value.stringValue()));
-        
         return inputSources;
     }
      

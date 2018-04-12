@@ -44,8 +44,7 @@ public class LocalFileProcessor extends AbstractInputProcessor {
     }
     
     @Override
-    public InputStream getInputStream(
-            LogicalSource logicalSource, Map<String, String> parameters) {
+    public InputStream getInputStream(LogicalSource logicalSource, Map<String, String> parameters) {
         InputStream input = null;
         Source source = logicalSource.getSource();
         String template ;

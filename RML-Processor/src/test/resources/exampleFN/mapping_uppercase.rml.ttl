@@ -42,8 +42,10 @@
 
 # 3.1 Logical Sources
 ######################################################################################
+<#StdIn> a <http://datafabric.cc#StdIn> .
 
 <#Person_LogicalSource>
+    #rml:source <#StdIn> ;
 	rml:source "src/test/resources/exampleFN/input.csv" ;
 	rml:referenceFormulation ql:CSV .
 

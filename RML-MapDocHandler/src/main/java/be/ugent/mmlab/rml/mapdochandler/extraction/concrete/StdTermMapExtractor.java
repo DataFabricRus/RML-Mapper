@@ -7,8 +7,10 @@ import be.ugent.mmlab.rml.model.RDFTerm.GraphMap;
 import be.ugent.mmlab.rml.model.TriplesMap;
 import be.ugent.mmlab.rml.model.termMap.ReferenceMap;
 import be.ugent.mmlab.rml.vocabularies.R2RMLVocabulary;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
@@ -18,13 +20,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * *************************************************************************
- *
+ * <p>
  * RML - Mapping Document Handler : StdTermMapExtractor
  *
- *
  * @author andimou
- *
- ***************************************************************************
+ * <p>
+ * **************************************************************************
  */
 public class StdTermMapExtractor implements TermMapExtractor {
     protected Value constantValue = null;
@@ -35,53 +36,66 @@ public class StdTermMapExtractor implements TermMapExtractor {
     protected Set<Condition> conditions = null;
     protected Set<Value> graphMapValues = null;
     protected Set<GraphMap> graphMaps = null;
-    
+
     // Log
-    static final Logger log = 
-            LoggerFactory.getLogger(
-            StdTermMapExtractor.class.getSimpleName());
-    
+    static final Logger log = LoggerFactory.getLogger(StdTermMapExtractor.class.getSimpleName());
+
     //TODO: Spring it!
-    public void extractProperties(
-            Repository repository, TriplesMap triplesMap, Resource object) {
+    public void extractProperties(Repository repository, Resource object) {
         // Extract object maps properties
-        constantValue = TermExtractor.extractValueFromTermMap(repository,
-                object, R2RMLVocabulary.R2RMLTerm.CONSTANT, triplesMap);
-        stringTemplate = TermExtractor.extractLiteralFromTermMap(repository,
-                object, R2RMLVocabulary.R2RMLTerm.TEMPLATE, triplesMap);
-        termType = (IRI) TermExtractor.extractValueFromTermMap(repository, object,
-                R2RMLVocabulary.R2RMLTerm.TERM_TYPE, triplesMap);
-        inverseExpression = TermExtractor.extractLiteralFromTermMap(repository,
-                object, R2RMLVocabulary.R2RMLTerm.INVERSE_EXPRESSION, triplesMap);
+        constantValue = TermExtractor.extractValueFromTermMap(
+                repository,
+                object,
+                R2RMLVocabulary.R2RMLTerm.CONSTANT
+        );
+
+        stringTemplate = TermExtractor.extractLiteralFromTermMap(
+                repository,
+                object,
+                R2RMLVocabulary.R2RMLTerm.TEMPLATE
+        );
+
+        termType = (IRI) TermExtractor.extractValueFromTermMap(
+                repository,
+                object,
+                R2RMLVocabulary.R2RMLTerm.TERM_TYPE
+        );
+
+        inverseExpression = TermExtractor.extractLiteralFromTermMap(
+                repository,
+                object,
+                R2RMLVocabulary.R2RMLTerm.INVERSE_EXPRESSION
+        );
+
         termMapExtractor = new TermExtractor();
         //MVS: Decide on ReferenceIdentifier
         //TODO:Add check if the referenceValue is a valid reference 
         //     according to the reference formulation
-        referenceValue = termMapExtractor.extractReferenceIdentifier(
-                repository, object, triplesMap);
-        
+        referenceValue = termMapExtractor.extractReferenceIdentifier(repository, object);
+
         //AD:Move it a separate function that extracts the GraphMaps
-        graphMaps = new HashSet<GraphMap>();
+        graphMaps = new HashSet<>();
         graphMapValues = TermExtractor.extractValuesFromResource(
-                    repository, object, R2RMLVocabulary.R2RMLTerm.GRAPH_MAP);
-        if(graphMapValues != null)
+                repository,
+                object,
+                R2RMLVocabulary.R2RMLTerm.GRAPH_MAP
+        );
+        if (graphMapValues != null) {
             log.debug("Found Graph Maps!");
+        }
         //TODO: Generalize the following for every condition
-        AbstractConditionExtractor conditionsExtractor =
-                new AbstractConditionExtractor();
+        AbstractConditionExtractor conditionsExtractor = new AbstractConditionExtractor();
         conditions = conditionsExtractor.extractConditions(repository, object);
 
     }
 
-    public  GraphMap extractGraphMap(Repository repository, TriplesMap triplesMap, GraphMap graphMap){
+    public GraphMap extractGraphMap(Repository repository, GraphMap graphMap) {
         if (graphMapValues != null && graphMapValues.size() > 0) {
             GraphMapExtractor graphMapExtractor = new GraphMapExtractor();
-            graphMaps = graphMapExtractor.extractGraphMapValues(
-                    repository, graphMapValues, triplesMap);
-            if(graphMaps != null && graphMaps.size() > 0){
+            graphMaps = graphMapExtractor.extractGraphMapValues(repository, graphMapValues);
+            if (graphMaps != null && graphMaps.size() > 0) {
                 graphMap = graphMaps.iterator().next();
             }
-
         }
         return graphMap;
     }

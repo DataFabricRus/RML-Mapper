@@ -29,8 +29,7 @@ public class ConcreteRMLProcessorFactory implements RMLProcessorFactory{
      * @return processor able to process the specified language
      */
     @Override
-    public RMLProcessor create(
-            QLTerm term, Map<String, String> parameters, TriplesMap map) {
+    public RMLProcessor create(QLTerm term, Map<String, String> parameters, TriplesMap map) {
         switch (term){
             case XPATH_CLASS:
                 return new XPathProcessor(parameters, map);

@@ -96,6 +96,11 @@ public class StdRMLDataset implements RMLDataset {
             log.error("Exception " + ex);
         }
     }
+
+    @Override
+    public void dumpRDF(OutputStream out, String outform) {
+        dumpRDF(out, selectFormat(outform));
+    }
     
     //TODO: Spring it
     @Override
@@ -104,7 +109,6 @@ public class StdRMLDataset implements RMLDataset {
             RepositoryConnection con = repository.getConnection();
             try {
                 RDFWriter w = Rio.createWriter(outform, out);
-                
                 con.export(w);
             } finally {
                 con.close();
@@ -307,7 +311,7 @@ public class StdRMLDataset implements RMLDataset {
     }
     
     @Override
-    public RDFFormat selectFormat(String outputFormat) {
+    public  RDFFormat selectFormat(String outputFormat) {
         RDFFormat rdfFormat ;
         //TODO: Spring it!
         switch (outputFormat) {

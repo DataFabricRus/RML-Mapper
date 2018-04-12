@@ -60,10 +60,18 @@ public class StdMetadataRMLEngine extends StdRMLEngine {
     
     @Override
     public void run(
-            RMLMapping mapping, String outputFile, String outputFormat,
-            String graphName, Map<String, String> parameters, String[] exeTriplesMap, 
-            String metadataLevel, String metadataFormat, String metadataVocab) {
-        //StdMetadataRMLEngine engine; 
+            RMLMapping mapping,
+            String outputFile,
+            String outputFormat,
+            String graphName,
+            Map<String, String> parameters,
+            String[] exeTriplesMap,
+            String metadataLevel,
+            String metadataFormat,
+            String metadataVocab
+    ) {
+
+        //StdMetadataRMLEngine engine;
         MetadataRMLDataset dataset;
         
         //If not user-defined, use same as for the output

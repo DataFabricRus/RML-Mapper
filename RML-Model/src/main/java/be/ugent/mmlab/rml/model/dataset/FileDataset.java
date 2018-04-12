@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.IRI;
@@ -26,27 +27,27 @@ import org.slf4j.LoggerFactory;
 
 /**
  * RML Processor
- * 
+ *
  * @author andimou
  */
 public class FileDataset extends StdRMLDataset {
 
     // Log
-    private static final Logger log = 
+    private static final Logger log =
             LoggerFactory.getLogger(
-            FileDataset.class.getSimpleName());
-    
+                    FileDataset.class.getSimpleName());
+
     private File target;
-        
+
     public FileDataset(String target) {
         try {
             this.target = new File(target);
             String indexes = "spoc";
-            
+
             // Get the operating system temporary directory
             String property = "java.io.tmpdir";
             String tempDir = System.getProperty(property) + "/RML-Processor";
-            log.debug("OS current temporary directory is " + tempDir); 
+            log.debug("OS current temporary directory is " + tempDir);
             repository = new SailRepository(new NativeStore(new File(tempDir), indexes));
             repository.initialize();
 
@@ -54,29 +55,31 @@ public class FileDataset extends StdRMLDataset {
             log.error("Repository Exception " + ex);
         }
     }
-    
+
     /**
-     *
      * @param target
      * @param outputFormat
      * @param manager
      * @param repositoryID
      */
-    public FileDataset(String target, String outputFormat, 
-           LocalRepositoryManager manager, String repositoryID) {
+    public FileDataset(String target,
+                       String outputFormat,
+                       LocalRepositoryManager manager,
+                       String repositoryID
+    ) {
         //Set the final output
         this.target = new File(target);
 
         try {
             //TODO: Move that to super
             String indexes = "spoc";
-            SailRepositoryConfig repositoryTypeSpec = 
+            SailRepositoryConfig repositoryTypeSpec =
                     new SailRepositoryConfig(new NativeStoreConfig(indexes));
-            RepositoryConfig repConfig = 
+            RepositoryConfig repConfig =
                     new RepositoryConfig(repositoryID, repositoryTypeSpec);
             manager.addRepositoryConfig(repConfig);
             repository = manager.getRepository(repositoryID);
-            if(!repository.isInitialized())
+            if (!repository.isInitialized())
                 repository.initialize();
 
             //Clean up repo from previous use
@@ -84,9 +87,9 @@ public class FileDataset extends StdRMLDataset {
             con.clear();
             con.commit();
             con.close();
-            
+
             this.format = selectFormat(outputFormat);
-            
+
         } catch (RepositoryException ex) {
             log.error("Repository Exception " + ex);
         } catch (RepositoryConfigException ex) {
@@ -94,12 +97,12 @@ public class FileDataset extends StdRMLDataset {
         }
 
     }
-    
+
     @Override
     public void add(Resource s, IRI p, Value o, Resource... contexts) {
         log.debug("Add triple (" + s.stringValue()
                 + ", " + p.stringValue() + ", " + o.stringValue() + ").");
-        
+
         try {
             RepositoryConnection con = repository.getConnection();
             try {
@@ -107,8 +110,8 @@ public class FileDataset extends StdRMLDataset {
                 Statement st = myFactory.createStatement((Resource) s, p,
                         (Value) o);
                 con.add(st, contexts);
-               
-                con.commit();                
+
+                con.commit();
             } catch (Exception ex) {
                 log.error("Exception " + ex);
             } finally {
@@ -118,10 +121,9 @@ public class FileDataset extends StdRMLDataset {
             log.error("Exception " + ex);
         }
     }
-    
+
     /**
      * Close current repository.
-     *
      */
     @Override
     public void closeRepository() {
@@ -130,13 +132,13 @@ public class FileDataset extends StdRMLDataset {
             RDFWriter writer;
 
             //Prepare writer
-            if(this.target.exists()){
+            if (this.target.exists()) {
                 this.target.delete();
                 this.target.createNewFile();
             }
 
             //Prepare file output stream
-            FileOutputStream output = 
+            FileOutputStream output =
                     new FileOutputStream(this.target);
 
             writer = Rio.createWriter(this.format, output);
@@ -147,7 +149,7 @@ public class FileDataset extends StdRMLDataset {
 
             File repositories = new File(this.target.getParent() + "/repositories");
             deleteDirectory(repositories);
-            
+
         } catch (RepositoryException ex) {
             log.error("Repository Exception " + ex);
         } catch (FileNotFoundException ex) {
@@ -156,7 +158,7 @@ public class FileDataset extends StdRMLDataset {
             log.error("RDF Handler Exception " + ex);
         } catch (IOException ex) {
             log.error("IO Exception " + ex);
-        } 
+        }
     }
-       
+
 }

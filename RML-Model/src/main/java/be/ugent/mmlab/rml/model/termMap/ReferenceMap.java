@@ -3,7 +3,7 @@ package be.ugent.mmlab.rml.model.termMap;
 
 /**
  * RML - Model : Reference Map
- * 
+ * <p>
  * This interface offers a method for replacing a template with the expression it holds
  *
  * @author mielvandersande, andimou
@@ -11,30 +11,25 @@ package be.ugent.mmlab.rml.model.termMap;
 public interface ReferenceMap {
 
     /**
-     *
      * @return
      */
-    public String getReference();
-    
-    /**
-     *
-     * @param refMap
-     */
-    public void setReference(String reference);
+    String getReference();
 
     /**
-     *
+     * @param reference
+     */
+    void setReference(String reference);
+
+    /**
      * @param reference
      * @return
      */
-    public ReferenceMap getReferenceValue(String reference);
-    
+    ReferenceMap getReferenceValue(String reference);
+
     /**
-     *
      * @param refMap
      */
-    public void setReferenceValue(ReferenceMap refMap);
-    
-    
-    
+    void setReferenceValue(ReferenceMap refMap);
+
+
 }

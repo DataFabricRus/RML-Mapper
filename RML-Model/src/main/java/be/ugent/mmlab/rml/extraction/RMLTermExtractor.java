@@ -12,39 +12,36 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 
 /**
  * *************************************************************************
- *
+ * <p>
  * RML - Mapping Document Handler : RMLTermExtractor
  *
- *
  * @author andimou
- *
- ***************************************************************************
+ * <p>
+ * **************************************************************************
  */
 public class RMLTermExtractor {
 
     // Log
-    static final Logger log = LoggerFactory.getLogger(
-            RMLTermExtractor.class.getSimpleName());
+    static final Logger log = LoggerFactory.getLogger(RMLTermExtractor.class.getSimpleName());
 
     public static IRI getTermURI(Repository repository, Enum term) {
         String namespace = R2RMLVocabulary.R2RML_NAMESPACE;
-        ValueFactory vf ;
+        ValueFactory vf;
         IRI uri = null;
         try {
             RepositoryConnection connection = repository.getConnection();
             vf = connection.getValueFactory();
-            
+
 
             if (term instanceof RMLVocabulary.RMLTerm) {
                 namespace = RMLVocabulary.RML_NAMESPACE;
             } else if (!(term instanceof R2RMLVocabulary.R2RMLTerm)) {
-                log.error(term + " is not valid.");
+                log.error("{} is not valid.", term);
             }
             uri = vf.createIRI(namespace + term);
-
             connection.close();
         } catch (RepositoryException ex) {
-            log.error("RepositoryException " + ex);
+            log.error("RepositoryException", ex);
         }
         return uri;
     }

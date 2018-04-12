@@ -73,8 +73,14 @@ public class StdLogicalSource implements LogicalSource {
         setCustomReferenceFormulation(dialect);
     }
     
-    public StdLogicalSource(String iterator, Source inputSource, String query,
-            String table, QLTerm referenceFormulation, ReferenceFormulation dialect) {
+    public StdLogicalSource(
+            String iterator,
+            Source inputSource,
+            String query,
+            String table,
+            QLTerm referenceFormulation,
+            ReferenceFormulation dialect
+    ) {
         setIterator(iterator);
         setSource(inputSource);
         setQuery(query);

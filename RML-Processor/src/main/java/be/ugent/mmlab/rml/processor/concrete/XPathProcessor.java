@@ -103,11 +103,11 @@ public class XPathProcessor extends AbstractRMLProcessor {
             }
             input.close();
         } catch (SAXPathException ex) {
-            log.error("SAX Path Exception: " + ex);
+            log.error("SAX Path Exception", ex);
         } catch (XPathException ex) {
-            log.error("XPath Exception " + ex);
+            log.error("XPath Exception", ex);
         } catch (IOException ex) {
-            log.error("IO Exception " + ex);
+            log.error("IO Exception", ex);
         }
         return dnc;
     }

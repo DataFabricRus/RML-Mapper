@@ -112,9 +112,15 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
      */
     @Override
     public void processPredicateObjectMap(
-            RMLDataset dataset, Resource subject, PredicateObjectMap pom,
-            Object node, TriplesMap map, String[] exeTriplesMap,
-            RMLProcessor processor, GraphMap graphMap) {
+            RMLDataset dataset,
+            Resource subject,
+            PredicateObjectMap pom,
+            Object node,
+            TriplesMap map,
+            String[] exeTriplesMap,
+            RMLProcessor processor,
+            GraphMap graphMap
+    ) {
         Set<PredicateMap> predicateMaps = pom.getPredicateMaps();
         boolean flag = true;
         //TODO: create processConditionPredicateObjectMap instead
@@ -184,8 +190,16 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
                             pom.getReferencingObjectMaps();
                     if (referencingObjectMaps != null && referencingObjectMaps.size() > 0)
                         predicateObjectProcessor.processPredicateObjectMap_RefObjMap(
-                                dataset, subject, predicate, referencingObjectMaps, node,
-                                map, parameters, exeTriplesMap, graphMap);
+                                dataset,
+                                subject,
+                                predicate,
+                                referencingObjectMaps,
+                                node,
+                                map,
+                                parameters,
+                                exeTriplesMap,
+                                graphMap
+                        );
 
                     //Process the Function Object Maps
                     Set<FunctionTermMap> functionTermMaps =

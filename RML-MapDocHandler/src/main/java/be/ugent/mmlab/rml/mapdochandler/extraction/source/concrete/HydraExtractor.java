@@ -45,19 +45,17 @@ public class HydraExtractor extends StdSourceExtractor {
 
     @Override
     public Set<Source> extractSources(Repository repository, Value resource) {
-        Set<Source> sources = new HashSet<Source>();
+        Set<Source> sources = new HashSet<>();
         try {
             RepositoryConnection connection = repository.getConnection();
             
-            IRI predicate = vf.createIRI(
-                    HydraVocabulary.HYDRA_NAMESPACE + HydraVocabulary.HydraTerm.TEMPLATE);
+            IRI predicate = vf.createIRI(HydraVocabulary.HYDRA_NAMESPACE + HydraVocabulary.HydraTerm.TEMPLATE);
             RepositoryResult<Statement> statements =
                     connection.getStatements((Resource) resource, predicate, null, true);
 
             while (statements.hasNext()) {
                 Statement statement = statements.next();
-                Source inputSource = 
-                        extractSource(repository, (Resource) resource, statement);
+                Source inputSource = extractSource(repository, (Resource) resource, statement);
                 sources.add(inputSource);
             }
             connection.close();
@@ -67,15 +65,13 @@ public class HydraExtractor extends StdSourceExtractor {
         return sources;
     }
     
-    public Source extractSource(
-            Repository repository, Resource resource, Statement statement) {
+    public Source extractSource(Repository repository, Resource resource, Statement statement) {
         Value value = statement.getObject();
         
         List<Map<String, Boolean>> mapTemplates = 
                 extractMappingTemplates(repository, resource);
         //log.debug("Mapping templates were extracted.");
-        Source source = new StdApiSource(
-                resource.stringValue(), value.stringValue(), mapTemplates);
+        Source source = new StdApiSource(resource.stringValue(), value.stringValue(), mapTemplates);
         //log.debug("Source was extracted.");
         return source;
     }

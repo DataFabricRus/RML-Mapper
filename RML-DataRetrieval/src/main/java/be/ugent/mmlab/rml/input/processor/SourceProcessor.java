@@ -1,6 +1,7 @@
 package be.ugent.mmlab.rml.input.processor;
 
 import be.ugent.mmlab.rml.model.LogicalSource;
+
 import java.io.InputStream;
 import java.util.Map;
 
@@ -11,15 +12,12 @@ import java.util.Map;
  */
 public interface SourceProcessor {
     /**
-     *
-     * @param triplesMap
-     * @param source
-     * @param triplesMap
+     * @param logicalSource
+     * @param parameters
      * @return
      */
-    public InputStream getInputStream(
-            LogicalSource logicalSource, Map<String, String> parameters);
-    
-    public boolean hasNextInputStream();
+    InputStream getInputStream(LogicalSource logicalSource, Map<String, String> parameters);
+
+    boolean hasNextInputStream();
 
 }

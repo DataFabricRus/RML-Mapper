@@ -1,15 +1,9 @@
 package be.ugent.mmlab.rml.mapdochandler.extraction;
 
+import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.*;
 import be.ugent.mmlab.rml.model.Source;
 import be.ugent.mmlab.rml.mapdochandler.extraction.concrete.SourceExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.CsvwExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.DcatExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.HydraExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.HydraPagedCollectionExtractor;
 //import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.HydraPagedCollectionExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.JdbcExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.LocalFileExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.SparqlExtractor;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,15 +45,19 @@ public class ConcreteSourceFactory implements SourceFactory {
             } else {
                 log.debug("Resource-valued Input Source");
                 
-                RepositoryResult<Statement> inputStatements =
-                        connection.getStatements(
-                        (Resource) value, RDF.TYPE, null, true);
-                if(inputStatements == null)
-                    log.error("no input statement found");
+                RepositoryResult<Statement> inputStatements = connection.getStatements(
+                        (Resource) value,
+                        RDF.TYPE,
+                        null,
+                        true
+                );
 
-                String sourceType = 
-                        inputStatements.next().getObject().stringValue().toString();
-                log.debug("source type " + sourceType);
+                if(inputStatements == null) {
+                    log.error("No input statement found");
+                }
+
+                String sourceType = inputStatements.next().getObject().stringValue();
+                log.debug("source type {}", sourceType);
 
                 switch (sourceType) {
                     case ("http://www.w3.org/ns/hydra/core#IriTemplate"):
@@ -87,6 +85,10 @@ public class ConcreteSourceFactory implements SourceFactory {
                         log.debug("Source described with D2RQ vocabulary.");
                         sourceExtractor = new JdbcExtractor();
                         break;
+                    case ("http://datafabric.cc#StdIn"):
+                        log.debug("Source is standard input");
+                        sourceExtractor = new StdInExtractor();
+                        break;
                     default:
                         log.error("Not identified source type");
                 }
@@ -107,7 +109,7 @@ public class ConcreteSourceFactory implements SourceFactory {
                 log.debug("Literal-valued Input Source");
                 //TODO: Change extractInput to Value instead of Resource
                 LocalFileExtractor localFileExtractor = new LocalFileExtractor();
-                inputSources = localFileExtractor.extractInput(repository, value.stringValue());
+                inputSources = localFileExtractor.extractInput(value.stringValue());
                 
             } else {
                 log.debug("Resource-valued Input Source");

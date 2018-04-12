@@ -3,70 +3,62 @@ package be.ugent.mmlab.rml.condition.model;
 import be.ugent.mmlab.rml.model.PredicateObjectMap;
 import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import be.ugent.mmlab.rml.model.RDFTerm.ReferencingObjectMap;
+
 import java.util.Set;
 
 /**
  * *************************************************************************
- *
+ * <p>
  * RML - Conditions : Condition
  *
- *
  * @author andimou
- *
- ***************************************************************************
+ * <p>
+ * **************************************************************************
  */
-abstract public interface Condition {
-    
+public interface Condition {
+
     /**
-     *
      * @return
      */
-    public String getCondition();
-    
+    String getCondition();
+
     /**
-     *
      * @return
      */
-    public String getReference();
-    
+    String getReference();
+
     /**
-     *
      * @return
      */
-    public Set<Condition> getNestedConditions();
-    
+    Set<Condition> getNestedConditions();
+
     /**
-     *
      * @return
      */
-    public ReferencingObjectMap getReferencingObjectMap();
-    
+    ReferencingObjectMap getReferencingObjectMap();
+
     /**
-     *
      * @return
      */
-    public Set<BindingCondition> getBindingConditions();
-    
+    Set<BindingCondition> getBindingConditions();
+
     /**
-     *
      * @param nestedConditions
      */
-    public void setBindingConditions(Set<BindingCondition> nestedConditions);
-    
+    void setBindingConditions(Set<BindingCondition> nestedConditions);
+
     /**
-     *
      * @return
      */
-    public PredicateObjectMap getFallback();
-    
+    PredicateObjectMap getFallback();
+
     /**
-     *
      * @param predicateObjectMap
      */
-    public void setFallback(PredicateObjectMap predicateObjectMap);
+    void setFallback(PredicateObjectMap predicateObjectMap);
 
-    public Set<FunctionTermMap> getFunctionTermMaps();
+    Set<FunctionTermMap> getFunctionTermMaps();
 
-    public void setFunctionTermMaps(Set<FunctionTermMap> functionTermMaps);
-    
+    void setFunctionTermMaps(Set<FunctionTermMap> functionTermMaps);
+
 }

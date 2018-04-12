@@ -105,8 +105,10 @@ public class TriplesMapExtractor {
         return result;
     }
 
-    protected LogicalSource extractLogicalSources(
-            Repository repository, Resource triplesMapSubject, TriplesMap triplesMap) {
+    protected LogicalSource extractLogicalSources(Repository repository,
+                                                  Resource triplesMapSubject,
+                                                  TriplesMap triplesMap
+    ) {
         RepositoryResult<Statement> sourceStatements;
         LogicalSource logicalSource = null;
         SourceExtractor sourceExtractor = null;
@@ -117,32 +119,27 @@ public class TriplesMapExtractor {
 
             LogicalSourceExtractor logicalSourceExtractor =
                     new LogicalSourceExtractor();
-            Resource blankLogicalSource =
-                    logicalSourceExtractor.
-                            extractLogicalSource(
-                                    repository, triplesMapSubject, triplesMap);
+            Resource blankLogicalSource = logicalSourceExtractor.extractLogicalSource(
+                    repository,
+                    triplesMapSubject,
+                    triplesMap
+            );
 
-            QLTerm referenceFormulation =
-                    logicalSourceExtractor.getReferenceFormulation(
-                            repository, blankLogicalSource, triplesMap);
+            QLTerm referenceFormulation = logicalSourceExtractor.getReferenceFormulation(
+                    repository,
+                    blankLogicalSource,
+                    triplesMap
+            );
             log.debug("Reference Formulation {}", referenceFormulation);
 
-            String iterator =
-                    logicalSourceExtractor.getIterator(
-                            repository, blankLogicalSource, triplesMap);
+            String iterator = logicalSourceExtractor.getIterator(repository, blankLogicalSource, triplesMap);
             log.debug("Iterator {}", iterator);
 
-            String table =
-                    logicalSourceExtractor.getTableName(
-                            repository, blankLogicalSource, triplesMap);
+            String table = logicalSourceExtractor.getTableName(repository, blankLogicalSource, triplesMap);
             log.debug("Table {}", table);
 
-            IRI p = vf.createIRI(
-                    RMLVocabulary.RML_NAMESPACE
-                            + RMLVocabulary.RMLTerm.SOURCE);
-            sourceStatements =
-                    connection.getStatements(
-                            blankLogicalSource, p, null, true);
+            IRI p = vf.createIRI(RMLVocabulary.RML_NAMESPACE + RMLVocabulary.RMLTerm.SOURCE);
+            sourceStatements = connection.getStatements(blankLogicalSource, p, null, true);
 
             while (sourceStatements.hasNext()) {
                 Set<Source> inputSources;
@@ -152,18 +149,14 @@ public class TriplesMapExtractor {
                 if (sourceStatement.getObject().getClass().getSimpleName().equals("MemLiteral")) {
                     log.debug("Literal-valued Input Source");
                     LocalFileExtractor input = new LocalFileExtractor();
-                    inputSources =
-                            input.extractSources(
-                                    repository, sourceStatement.getObject());
+                    inputSources = input.extractSources(repository, sourceStatement.getObject());
 
                 } //object input
                 else {
                     log.debug("Resource-valued Input Source");
                     ConcreteSourceFactory inputFactory = new ConcreteSourceFactory();
-                    sourceExtractor = inputFactory.createSourceExtractor(
-                            repository, (Resource) sourceStatement.getObject());
-                    inputSources = sourceExtractor.
-                            extractSources(repository, sourceStatement.getObject());
+                    sourceExtractor = inputFactory.createSourceExtractor(repository, sourceStatement.getObject());
+                    inputSources = sourceExtractor.extractSources(repository, sourceStatement.getObject());
                     log.debug("Source extracted: {}", inputSources);
                 }
 
@@ -181,8 +174,13 @@ public class TriplesMapExtractor {
 
                 for (Source inputSource : inputSources) {
                     logicalSource = new StdLogicalSource(
-                            iterator, inputSource, query, table,
-                            referenceFormulation, dialect);
+                            iterator,
+                            inputSource,
+                            query,
+                            table,
+                            referenceFormulation,
+                            dialect
+                    );
                 }
                 log.debug("Triples Map extracted");
             }
@@ -197,20 +195,26 @@ public class TriplesMapExtractor {
 
 
     public Set<PredicateObjectMap> extractPredicateObjectMaps(
-            Repository repository, Resource triplesMapSubject,
-            GraphMap graphMap, TriplesMap result,
-            Map<Resource, TriplesMap> triplesMapResources) {
+            Repository repository,
+            Resource triplesMapSubject,
+            GraphMap graphMap,
+            TriplesMap result,
+            Map<Resource, TriplesMap> triplesMapResources
+    ) {
         Set<PredicateObjectMap> predicateObjectMaps = null;
         try {
             RepositoryConnection connection = repository.getConnection();
             ValueFactory vf = connection.getValueFactory();
             // Extract predicate-object maps
-            IRI p = vf.createIRI(R2RMLVocabulary.R2RML_NAMESPACE
-                    + R2RMLVocabulary.R2RMLTerm.PREDICATE_OBJECT_MAP);
-            RepositoryResult<Statement> statements =
-                    connection.getStatements(triplesMapSubject, p, null, true);
+            IRI p = vf.createIRI(R2RMLVocabulary.R2RML_NAMESPACE + R2RMLVocabulary.R2RMLTerm.PREDICATE_OBJECT_MAP);
+            RepositoryResult<Statement> statements = connection.getStatements(
+                    triplesMapSubject,
+                    p,
+                    null,
+                    true
+            );
 
-            predicateObjectMaps = new HashSet<PredicateObjectMap>();
+            predicateObjectMaps = new HashSet<>();
             try {
                 while (statements.hasNext()) {
                     PredicateObjectMapExtractor preObjMapExtractor;
@@ -218,16 +222,17 @@ public class TriplesMapExtractor {
 
                     if (connection.hasStatement(
                             (Resource) statement.getObject(),
-                            vf.createIRI(CRMLVocabulary.CRML_NAMESPACE
-                                    + CRMLVocabulary.cRMLTerm.BOOLEAN_CONDITION), null, true)) {
+                            vf.createIRI(CRMLVocabulary.CRML_NAMESPACE + CRMLVocabulary.cRMLTerm.BOOLEAN_CONDITION),
+                            null,
+                            true)) {
                         log.debug("Condition Predicate Object Map Extractor");
                         preObjMapExtractor = new ConditionPredicateObjectMapExtractor();
                     } else {
                         if (connection.hasStatement(
                                 (Resource) statement.getObject(),
-                                vf.createIRI(CRMLVocabulary.CRML_NAMESPACE
-                                        + CRMLVocabulary.cRMLTerm.FALLBACK),
-                                null, true)) {
+                                vf.createIRI(CRMLVocabulary.CRML_NAMESPACE + CRMLVocabulary.cRMLTerm.FALLBACK),
+                                null,
+                                true)) {
                             log.debug("Predicate Object Map with fallback POM");
                             preObjMapExtractor = new ConditionPredicateObjectMapExtractor();
                         } else {
@@ -235,11 +240,15 @@ public class TriplesMapExtractor {
                             preObjMapExtractor = new PredicateObjectMapExtractor();
                         }
                     }
-                    PredicateObjectMap predicateObjectMap =
-                            preObjMapExtractor.extractPredicateObjectMap(
-                                    repository, triplesMapSubject,
-                                    (Resource) statement.getObject(),
-                                    graphMap, triplesMapResources, result);
+                    PredicateObjectMap predicateObjectMap = preObjMapExtractor.extractPredicateObjectMap(
+                            repository,
+                            triplesMapSubject,
+                            (Resource) statement.getObject(),
+                            graphMap,
+                            triplesMapResources,
+                            result
+                    );
+
                     if (predicateObjectMap != null) {
                         predicateObjectMap.setOwnTriplesMap(result);
                         predicateObjectMaps.add(predicateObjectMap);

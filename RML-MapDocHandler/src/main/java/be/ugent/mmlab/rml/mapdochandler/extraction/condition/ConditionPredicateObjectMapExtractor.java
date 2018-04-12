@@ -12,10 +12,12 @@ import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
 import be.ugent.mmlab.rml.model.RDFTerm.GraphMap;
 import be.ugent.mmlab.rml.model.TriplesMap;
 import be.ugent.mmlab.rml.model.std.StdConditionPredicateObjectMap;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.rdf4j.model.Resource;
@@ -28,12 +30,10 @@ import org.eclipse.rdf4j.repository.Repository;
  * @author andimou
  */
 public class ConditionPredicateObjectMapExtractor extends PredicateObjectMapExtractor {
-    
+
     //Log
-    private static final Logger log = 
-            LogManager.getLogger(
-            ConditionPredicateObjectMapExtractor.class.getSimpleName());
-    
+    private static final Logger log = LogManager.getLogger(ConditionPredicateObjectMapExtractor.class.getSimpleName());
+
     @Override
     public PredicateObjectMap extractPredicateObjectMap(
             Repository repository,
@@ -41,19 +41,19 @@ public class ConditionPredicateObjectMapExtractor extends PredicateObjectMapExtr
             Resource predicateObject,
             GraphMap graphMap,
             Map<Resource, TriplesMap> triplesMapResources,
-            TriplesMap triplesMap){
+            TriplesMap triplesMap) {
         PredicateObjectMap predicateObjectMap = null;
         log.debug("Extracting Predicate Object Map with conditions....");
         PredicateObjectMap pom =
                 super.extractPredicateObjectMap(
-                repository, triplesMapSubject, predicateObject,
-                graphMap, triplesMapResources, triplesMap);
+                        repository, triplesMapSubject, predicateObject,
+                        graphMap, triplesMapResources, triplesMap);
         if (pom != null) {
             Set<Condition> conditions =
-                    extractConditions(repository, predicateObject, triplesMapResources, triplesMap);
+                    extractConditions(repository, predicateObject, triplesMapResources);
             log.debug("Found " + conditions.size() + " conditions.");
             Set<PredicateObjectMap> fallbackPOMs =
-                    extractFallback(repository, predicateObject,triplesMapResources,triplesMap);
+                    extractFallback(repository, predicateObject, triplesMapResources, triplesMap);
             log.debug("Found " + fallbackPOMs.size() + " Fallback POMs.");
 
             if (conditions.size() > 0 || fallbackPOMs.size() > 0) {
@@ -69,59 +69,60 @@ public class ConditionPredicateObjectMapExtractor extends PredicateObjectMapExtr
         }
         return predicateObjectMap;
     }
-    
-    public static Set<Condition> extractConditions(
-            Repository repository, Resource object, Map<Resource, TriplesMap> triplesMapResources, TriplesMap triplesMap) {
-        Set<Condition> conditions = new HashSet<Condition>();
+
+    public static Set<Condition> extractConditions(Repository repository,
+                                                   Resource object,
+                                                   Map<Resource, TriplesMap> triplesMapResources
+    ) {
+        Set<Condition> conditions = new HashSet<>();
 
         try {
             log.debug("Extracting Conditions...");
             try {
                 //Extract Boolean Conditions
-                StdConditionExtractor conditionsExtractor =
-                        new BooleanConditionExtractor();
+                StdConditionExtractor conditionsExtractor = new BooleanConditionExtractor();
                 Condition booleanCondition = null;
 
                 //Extract all condition resources
-                Set<Resource> conditionResources =
-                        conditionsExtractor.extractConditionResources(
-                        repository, object);
+                Set<Resource> conditionResources = conditionsExtractor.extractConditionResources(repository, object);
 
                 //Parse the condition resources
                 for (Resource conditionResource : conditionResources) {
-                    booleanCondition =
-                            conditionsExtractor.extractBooleanCondition(
-                            repository, conditionResource);
+                    booleanCondition = conditionsExtractor.extractBooleanCondition(repository, conditionResource);
 
                     //Extracting Function Maps as Conditions
-                    FunctionTermMapExtractor funObjMapExtractor =
-                            new FunctionTermMapExtractor();
+                    FunctionTermMapExtractor funObjMapExtractor = new FunctionTermMapExtractor();
                     GraphMap graphMap = null;
                     Set<FunctionTermMap> funObjectMaps = funObjMapExtractor.processFunctionTermMap(
-                            repository, conditionResource, triplesMapResources, triplesMap, null, graphMap);
-                    if(booleanCondition == null && funObjectMaps != null && funObjectMaps.size() > 0 ){
+                            repository,
+                            conditionResource,
+                            triplesMapResources,
+                            null,
+                            graphMap
+                    );
+                    if (booleanCondition == null && funObjectMaps != null && funObjectMaps.size() > 0) {
                         booleanCondition = new StdBooleanCondition(funObjectMaps);
-                        //booleanCondition.setFunctionTermMaps(funObjectMaps);
-                    }
-                    else{
+                    } else {
                         booleanCondition.setFunctionTermMaps(funObjectMaps);
                     }
 
                     //Extracting Fallback Maps
                     log.debug("Extracting Fallback Maps...");
-                    List<Value> fallbackTerms = conditionsExtractor.extractFallback(
-                            repository, conditionResource);
+                    List<Value> fallbackTerms = conditionsExtractor.extractFallback(repository, conditionResource);
                     log.debug("Found " + fallbackTerms.size() + " fallback Maps");
 
                     //Extract the fallbackTerms
                     for (Value fallbackTerm : fallbackTerms) {
-                        PredicateObjectMapExtractor preObjMapExtractor =
-                                new PredicateObjectMapExtractor();
+                        PredicateObjectMapExtractor preObjMapExtractor = new PredicateObjectMapExtractor();
                         log.debug("Extracting nested POMs...");
-                        PredicateObjectMap predicateObjectMap =
-                                preObjMapExtractor.extractPredicateObjectMap(
-                                repository, conditionResource,
-                                (Resource) fallbackTerm, null, null, null);
+                        PredicateObjectMap predicateObjectMap = preObjMapExtractor.extractPredicateObjectMap(
+                                repository,
+                                conditionResource,
+                                (Resource) fallbackTerm,
+                                null,
+                                null,
+                                null
+                        );
                         log.debug("Setting the fallback POM");
                         //extractFallback(fallbackTerm);
                         booleanCondition.setFallback(predicateObjectMap);
@@ -146,17 +147,19 @@ public class ConditionPredicateObjectMapExtractor extends PredicateObjectMapExtr
 
         return conditions;
     }
-    
+
     public static Set<PredicateObjectMap> extractFallback(
-            Repository repository, Resource object,
+            Repository repository,
+            Resource object,
             Map<Resource, TriplesMap> triplesMapResources,
-            TriplesMap triplesMap) {
+            TriplesMap triplesMap
+    ) {
         Set<PredicateObjectMap> nestedPOMs = new HashSet();
         StdConditionExtractor conditionsExtractor =
                 new StdConditionExtractor();
         List<Value> conditionResources =
                 conditionsExtractor.extractFallback(repository, object);
-        log.debug("Fallback condition resources found " 
+        log.debug("Fallback condition resources found "
                 + conditionResources.size());
 
         log.debug("Extracting fallbacks details...");
@@ -170,10 +173,14 @@ public class ConditionPredicateObjectMapExtractor extends PredicateObjectMapExtr
                     new PredicateObjectMapExtractor();
             log.debug("Extracting nested POMs...");
 
-            PredicateObjectMap predicateObjectMap =
-                    preObjMapExtractor.extractPredicateObjectMap(
-                    repository, null, (Resource) conditionResource,
-                    null, triplesMapResources,triplesMap);
+            PredicateObjectMap predicateObjectMap = preObjMapExtractor.extractPredicateObjectMap(
+                    repository,
+                    null,
+                    (Resource) conditionResource,
+                    null,
+                    triplesMapResources,
+                    triplesMap
+            );
             log.debug("fallback POM extracted "
                     + predicateObjectMap.toString());
 

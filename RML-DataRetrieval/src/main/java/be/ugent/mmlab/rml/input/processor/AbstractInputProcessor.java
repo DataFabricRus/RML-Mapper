@@ -32,19 +32,17 @@ public class AbstractInputProcessor implements SourceProcessor {
     }
     
     @Override
-    public InputStream getInputStream(
-            LogicalSource logicalSource, Map<String, String> parameters) {
+    public InputStream getInputStream(LogicalSource logicalSource, Map<String, String> parameters) {
         InputStream inputStream = null;
         SourceProcessor inputProcessor;
         Source source = logicalSource.getSource();
-        log.debug("type of source " + source.getClass().getSimpleName());
+        log.debug("type of source {}", source.getClass().getSimpleName());
 
         switch (source.getClass().getSimpleName()) {
             case ("StdLocalFileSource"):
                 log.debug("Local File as Source");
                 inputProcessor = new LocalFileProcessor();
-                inputStream = inputProcessor.
-                        getInputStream(logicalSource, parameters);
+                inputStream = inputProcessor.getInputStream(logicalSource, parameters);
                 break;
             case ("StdApiSource"):
                 log.debug("API Data Source.");

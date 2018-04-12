@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.slf4j.Logger;
@@ -38,7 +39,6 @@ public class Main {
         String triplesMap;
         String[] exeTriplesMap = null;
         Map<String, String> parameters = null;
-        BasicConfigurator.configure();
         CommandLine commandLine;
         StdRMLMappingFactory mappingFactory = new StdRMLMappingFactory();
 
@@ -119,15 +119,30 @@ public class Main {
                     && (metadataVocab == null || !metadataVocab.contains("co"))) {
                 log.debug("Mapping without metadata...");
                 RMLEngine engine = new StdRMLEngine(outputFile);
-                engine.run(mapping, outputFile, outputFormat,
-                        graphName, parameters, exeTriplesMap,
-                        null, null, null);
+                engine.run(
+                        mapping,
+                        outputFile,
+                        outputFormat,
+                        graphName,
+                        parameters,
+                        exeTriplesMap,
+                        null,
+                        null,
+                        null
+                );
             } else {
                 log.debug("Mapping with metadata...");
                 StdMetadataRMLEngine engine = new StdMetadataRMLEngine(outputFile);
-                engine.run(mapping, outputFile, outputFormat,
-                        graphName, parameters, exeTriplesMap,
-                        metadataLevel, metadataFormat, metadataVocab);
+                engine.run(
+                        mapping,
+                        outputFile,
+                        outputFormat,
+                        graphName,
+                        parameters,
+                        exeTriplesMap,
+                        metadataLevel,
+                        metadataFormat,
+                        metadataVocab);
             }
 
             System.exit(0);

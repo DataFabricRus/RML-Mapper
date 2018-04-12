@@ -19,12 +19,12 @@ public final class StdReferenceMap implements ReferenceMap {
     private String reference;
     
     // Log
-    private static final Logger log = 
-            LoggerFactory.getLogger(
-            StdReferenceMap.class.getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(StdReferenceMap.class.getSimpleName());
 
-    //private String reference = null;
-    
+    public StdReferenceMap(String reference) {
+        setReference(reference);
+    }
+
     @Override
     public ReferenceMap getReferenceValue(String reference) {
         if (reference == null) {
@@ -35,12 +35,8 @@ public final class StdReferenceMap implements ReferenceMap {
     
     public void setReferenceValue(String reference){
         this.reference = reference;
-    }    
-
-    public StdReferenceMap(String reference) {
-        setReference(reference);
     }
-    
+
     /**
      *
      * @return

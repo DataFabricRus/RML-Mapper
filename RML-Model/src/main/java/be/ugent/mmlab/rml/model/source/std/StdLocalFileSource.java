@@ -21,7 +21,7 @@ public class StdLocalFileSource extends StdSource implements LocalFileSource {
     /**
      *
      * @param name
-     * @param source
+     * @param template
      */
     public StdLocalFileSource(String name, String template){
         super(name, template);

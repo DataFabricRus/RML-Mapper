@@ -36,8 +36,11 @@ public class StdApiSource extends StdSource implements ApiSource {
      * @param template
      * @param mapTemplates
      */
-    public StdApiSource(String name, String template, 
-            List<Map<String,Boolean>> mapTemplates){
+    public StdApiSource(
+            String name,
+            String template,
+            List<Map<String,Boolean>> mapTemplates
+    ){
         super(name, template);
         setMappingTemplates(mapTemplates);
     }

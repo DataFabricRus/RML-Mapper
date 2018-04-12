@@ -1,18 +1,12 @@
 package be.ugent.mmlab.rml.input;
 
-import be.ugent.mmlab.rml.input.processor.ApiProcessor;
-import be.ugent.mmlab.rml.input.processor.JdbcProcessor;
-import be.ugent.mmlab.rml.input.processor.LocalFileProcessor;
-import be.ugent.mmlab.rml.input.processor.SourceProcessor;
-import be.ugent.mmlab.rml.input.processor.SparqlProcessor;
+import be.ugent.mmlab.rml.input.processor.*;
 import be.ugent.mmlab.rml.mapdochandler.extraction.concrete.SourceExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.DcatExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.HydraExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.JdbcExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.LocalFileExtractor;
-import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.SparqlExtractor;
+import be.ugent.mmlab.rml.mapdochandler.extraction.source.concrete.*;
 import be.ugent.mmlab.rml.model.Source;
+
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.eclipse.rdf4j.model.Resource;
@@ -30,18 +24,18 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
  * @author andimou
  */
 public class ConcreteLogicalSourceProcessorFactory implements SourceProcessorFactory {
-    
+
     // Log
-    private static final Logger log = 
+    private static final Logger log =
             LoggerFactory.getLogger(
-            ConcreteLogicalSourceProcessorFactory.class.getSimpleName());
-    
+                    ConcreteLogicalSourceProcessorFactory.class.getSimpleName());
+
     public SourceProcessor createSourceProcessor(Repository repository, Source source) {
         SourceProcessor sourceProcessor = null;
         try {
-            
+
             RepositoryConnection connection = repository.getConnection();
-            
+
             //TODO: Normally source won't work, it's of another class
             if (source.getClass().getSimpleName().equals("MemLiteral")) {
                 sourceProcessor = new LocalFileProcessor();
@@ -49,10 +43,10 @@ public class ConcreteLogicalSourceProcessorFactory implements SourceProcessorFac
                 //RepositoryResult<Statement> inputStatements =
                 //        connection.getStatements((Resource) value, RDF.TYPE, null, true);
                 //String sourceType = inputStatements.next().getObject().stringValue().toString();
-                
+
                 //TODO Normally the following switch case won't work.
                 String sourceType = source.getClass().getSimpleName();
-                log.debug("source type " + sourceType);
+                log.debug("source type {}", sourceType);
 
                 switch (sourceType) {
                     case ("StdApiSource"):
@@ -71,6 +65,10 @@ public class ConcreteLogicalSourceProcessorFactory implements SourceProcessorFac
                         log.debug("Processor for JDBC Source.");
                         sourceProcessor = new JdbcProcessor();
                         break;
+                    case ("StdInSource"):
+                        log.debug("Source is standard input");
+                        sourceProcessor = new StdInProcessor();
+                        break;
                     default:
                         log.error("Not identified source type");
                 }
@@ -81,7 +79,7 @@ public class ConcreteLogicalSourceProcessorFactory implements SourceProcessorFac
         }
         return sourceProcessor;
     }
-    
+
     public SourceProcessor createSourceProcessor(Source source) {
         SourceProcessor sourceProcessor = null;
 
@@ -116,6 +114,10 @@ public class ConcreteLogicalSourceProcessorFactory implements SourceProcessorFac
                     log.debug("Processor for JDBC Source.");
                     sourceProcessor = new JdbcProcessor();
                     break;
+                case ("StdInSource"):
+                    log.debug("Processor for StdIn Source.");
+                    sourceProcessor = new StdInProcessor();
+                    break;
                 default:
                     log.error("Not identified source type");
             }
@@ -124,7 +126,7 @@ public class ConcreteLogicalSourceProcessorFactory implements SourceProcessorFac
 
         return sourceProcessor;
     }
-    
+
     public Set<Source> chooseSource(Repository repository, Value value) {
         Set<Source> inputSources = null;
         try {
@@ -134,14 +136,14 @@ public class ConcreteLogicalSourceProcessorFactory implements SourceProcessorFac
                 log.debug("Literal-valued Input Source");
                 //TODO: Change extractInput to Value instead of Resource
                 LocalFileExtractor localFileExtractor = new LocalFileExtractor();
-                inputSources = localFileExtractor.extractInput(repository, value.stringValue());
-                
+                inputSources = localFileExtractor.extractInput(value.stringValue());
+
             } else {
                 log.debug("Resource-valued Input Source");
-                
+
                 RepositoryResult<Statement> inputStatements =
                         connection.getStatements((Resource) value, RDF.TYPE, null, true);
-                
+
                 String sourceType = inputStatements.next().getObject().stringValue().toString();
                 log.debug("source type " + sourceType);
 
@@ -177,5 +179,5 @@ public class ConcreteLogicalSourceProcessorFactory implements SourceProcessorFac
         }
         return inputSources;
     }
-    
+
 }

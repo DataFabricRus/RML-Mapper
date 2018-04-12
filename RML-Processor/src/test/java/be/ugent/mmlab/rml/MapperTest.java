@@ -2,23 +2,24 @@ package be.ugent.mmlab.rml;
 
 import be.ugent.mmlab.rml.core.RMLEngine;
 import be.ugent.mmlab.rml.core.StdRMLEngine;
-import be.ugent.mmlab.rml.model.dataset.RMLDataset;
-import be.ugent.mmlab.rml.model.dataset.StdRMLDataset;
 import be.ugent.mmlab.rml.mapdochandler.extraction.std.StdRMLMappingFactory;
 import be.ugent.mmlab.rml.mapdochandler.retrieval.RMLDocRetrieval;
 import be.ugent.mmlab.rml.model.RMLMapping;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import be.ugent.mmlab.rml.model.dataset.RMLDataset;
+import be.ugent.mmlab.rml.model.dataset.StdRMLDataset;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.rdf4j.repository.Repository;
 
-import static org.eclipse.rdf4j.rio.RDFFormat.*;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.eclipse.rdf4j.rio.RDFFormat.NQUADS;
+import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
 
 /**
  * Unit test for simple App.

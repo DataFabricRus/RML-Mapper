@@ -39,7 +39,6 @@ public class FunctionTermMapExtractor {
     public Set<FunctionTermMap> processFunctionTermMap(Repository repository,
                                                        Resource object,
                                                        Map<Resource, TriplesMap> triplesMapResources,
-                                                       TriplesMap triplesMap,
                                                        PredicateObjectMap predicateObjectMap,
                                                        GraphMap graphMap) {
         Set<FunctionTermMap> results = new HashSet<>();
@@ -54,7 +53,7 @@ public class FunctionTermMapExtractor {
             Set<IRI> parameters = null;
 
             //Extract additional properties for Function Term Map
-            IRI functionValue = (IRI) extractValueFromTermMap(repository, object, pred, triplesMap);
+            IRI functionValue = (IRI) extractValueFromTermMap(repository, object, pred);
 
             if (functionValue != null) {
                 TriplesMapExtractor triplesMapExtractor = new TriplesMapExtractor();
@@ -71,7 +70,7 @@ public class FunctionTermMapExtractor {
                 String languageTag = null;
                 String stringTemplate = null;
                 IRI termType = (IRI) TermExtractor.extractValueFromTermMap(repository, object,
-                        R2RMLVocabulary.R2RMLTerm.TERM_TYPE, triplesMap);;
+                        R2RMLVocabulary.R2RMLTerm.TERM_TYPE);
                 //URI termType = new URIImpl(R2RMLVocabulary.R2RMLTerm.LITERAL.toString());
                 String inverseExpression = null;
                 ReferenceMap referenceValue = null;

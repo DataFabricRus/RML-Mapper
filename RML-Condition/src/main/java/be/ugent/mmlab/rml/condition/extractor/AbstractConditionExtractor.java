@@ -2,8 +2,10 @@ package be.ugent.mmlab.rml.condition.extractor;
 
 import be.ugent.mmlab.rml.condition.model.BindingCondition;
 import be.ugent.mmlab.rml.condition.model.Condition;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.rdf4j.model.Resource;
@@ -17,25 +19,21 @@ import org.eclipse.rdf4j.repository.Repository;
 public class AbstractConditionExtractor {
 
     //Log
-    private static final Logger log =
-            LogManager.getLogger(
-            AbstractConditionExtractor.class.getSimpleName());
+    private static final Logger log = LogManager.getLogger(AbstractConditionExtractor.class.getSimpleName());
 
-    public static Set<Condition> extractConditions(
-            Repository repository, Resource object) {
-        Set<Condition> conditions = new HashSet<Condition>();
-
+    public static Set<Condition> extractConditions(Repository repository, Resource object) {
+        Set<Condition> conditions = new HashSet<>();
         try {
             log.debug("Extracting Conditions...");
-            
+
             try {
                 //Extract Binding Conditions
                 BindingConditionExtractor bindingConditionsExtractor =
                         new BindingConditionExtractor();
                 Set<BindingCondition> bindingConditions =
                         bindingConditionsExtractor.extractBindCondition(
-                        repository, object);
-                
+                                repository, object);
+
                 //Add Binding Conditions to the total
                 if (bindingConditions != null && bindingConditions.size() > 0) {
                     conditions.addAll(bindingConditions);
@@ -47,14 +45,18 @@ public class AbstractConditionExtractor {
 
             try {
                 //Extract Equal Conditions
-                StdConditionExtractor conditionsExtractor =
-                        new BooleanConditionExtractor();
-                Condition booleanCondition = 
-                        conditionsExtractor.extractCondition(
-                        repository, conditions, object);
-                
-                if(booleanCondition != null)
+                StdConditionExtractor conditionsExtractor = new BooleanConditionExtractor();
+                Condition booleanCondition =
+                        conditionsExtractor
+                                .extractCondition(
+                                        repository,
+                                        conditions,
+                                        object
+                                );
+
+                if (booleanCondition != null) {
                     conditions.add(booleanCondition);
+                }
             } catch (Exception ex) {
                 log.error("Exception " + ex + " because of Boolean Conditions");
             }
@@ -77,16 +79,16 @@ public class AbstractConditionExtractor {
             } catch (Exception ex) {
                 log.error("Exception " + ex + " because of Negation Conditions");
             }*/
-            
+
             //Extract Process Conditions
-            
+
             //Extract 'Split' Conditions
-            
+
             //Extract 
 
 
         } catch (ClassCastException e) {
-            log.error("Class cast exception " + e 
+            log.error("Class cast exception " + e
                     + " A resource was expected in object of predicateMap of "
                     + object.stringValue());
         }
