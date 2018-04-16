@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 
 /**
@@ -59,8 +58,12 @@ public class AbstractInputProcessor implements SourceProcessor {
             case ("StdStdJdbcSource"):
                 log.debug("JDBC Data Source.");
                 JdbcProcessor jdbcProcessor = new JdbcProcessor();
-                JdbcTemplate jdcTemplate = jdbcProcessor.
-                        getJdbcConnection((StdJdbcSource) source);
+                jdbcProcessor.getJdbcConnection((StdJdbcSource) source);
+                break;
+            case ("StdInSource"):
+                log.debug("StdIn Source");
+                NiFiStdInProcessor stdInProcessor = new NiFiStdInProcessor();
+                inputStream = stdInProcessor.getInputStream(logicalSource, parameters);
                 break;
             default:
                 log.error("Not identified input");

@@ -23,7 +23,7 @@ public enum TermType {
 
 	private String displayName;
 
-	private TermType(String displayName) {
+	TermType(String displayName) {
 		// The value MUST be an IRI
 		this.displayName = R2RMLVocabulary.R2RML_NAMESPACE + displayName;
 	}

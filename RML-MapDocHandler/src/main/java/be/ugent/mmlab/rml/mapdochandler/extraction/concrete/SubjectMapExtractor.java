@@ -69,7 +69,10 @@ public class SubjectMapExtractor extends StdTermMapExtractor {
             extractProperties(repository, subjectMap);
 
             Set<IRI> classIRIs = TermExtractor.extractURIsFromTermMap(
-                    repository, subjectMap, R2RMLVocabulary.R2RMLTerm.CLASS);
+                    repository,
+                    subjectMap,
+                    R2RMLVocabulary.R2RMLTerm.CLASS
+            );
 
             graphMap = extractGraphMap(repository, graphMap);
 

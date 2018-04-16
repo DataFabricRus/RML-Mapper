@@ -43,7 +43,10 @@ public abstract class AbstractTermMapProcessor implements TermMapProcessor{
         if(map.getClass().getSimpleName().equals("StdFunctionTermMap")){
             log.debug("Function Term Map is always Literal valued");
         }
-
+        if(map.getTermMapType() == null) {
+            //FIXME: it is a stub for subject map of a function that doesn't really used
+            return null;
+        }
         switch (map.getTermMapType()) {
             case REFERENCE_VALUED:
                 log.debug("Reference valued");

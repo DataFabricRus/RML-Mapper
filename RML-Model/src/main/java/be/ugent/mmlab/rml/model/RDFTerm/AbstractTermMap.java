@@ -28,9 +28,7 @@ import org.eclipse.rdf4j.model.Value;
 public abstract class AbstractTermMap implements TermMap {
 
     // Log
-    private static final Logger log =
-            LoggerFactory.getLogger(
-                    AbstractTermMap.class.getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(AbstractTermMap.class.getSimpleName());
 
     private IRI dataType;
     private TermType termType;
@@ -75,7 +73,7 @@ public abstract class AbstractTermMap implements TermMap {
      * Check if the global structure of this TermMap is consistent and valid
      * according to R2RML standard.
      */
-    private void checkGlobalConsistency() {
+    protected void checkGlobalConsistency() {
         // A term map must have exactly one Term Map type
         if (getTermMapType() == null) {
             if (getTermType() != TermType.BLANK_NODE) {

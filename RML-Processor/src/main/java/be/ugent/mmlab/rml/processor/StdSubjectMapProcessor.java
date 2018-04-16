@@ -5,10 +5,7 @@ import be.ugent.mmlab.rml.logicalsourcehandler.termmap.TermMapProcessor;
 
 import static be.ugent.mmlab.rml.model.RDFTerm.TermType.BLANK_NODE;
 
-import be.ugent.mmlab.rml.model.RDFTerm.FunctionTermMap;
-import be.ugent.mmlab.rml.model.RDFTerm.GraphMap;
-import be.ugent.mmlab.rml.model.RDFTerm.SubjectMap;
-import be.ugent.mmlab.rml.model.RDFTerm.TermMap;
+import be.ugent.mmlab.rml.model.RDFTerm.*;
 import be.ugent.mmlab.rml.model.TriplesMap;
 import be.ugent.mmlab.rml.model.dataset.RMLDataset;
 import be.ugent.mmlab.rml.model.std.StdConditionSubjectMap;
@@ -44,11 +41,14 @@ public class StdSubjectMapProcessor implements SubjectMapProcessor {
     public Resource processSubjectMap(RMLDataset dataset,
                                       FunctionTermMap functionTermMap,
                                       Object node,
-                                      RMLProcessor processor) {
+                                      RMLProcessor processor
+    ) {
 
 
-        Map<String, String> parameters =
-                StdObjectMapProcessor.retrieveParameters(node, functionTermMap.getFunctionTriplesMap());
+        Map<String, String> parameters = StdObjectMapProcessor.retrieveParameters(
+                node,
+                functionTermMap.getFunctionTriplesMap()
+        );
         String function = functionTermMap.getFunction().toString();
 
 
@@ -58,10 +58,8 @@ public class StdSubjectMapProcessor implements SubjectMapProcessor {
                 functionTermMap.getOwnTriplesMap().getLogicalSource().getReferenceFormulation(),
                 processor);
 
-        List<Value> values = this.termMapProcessor.processFunctionTermMap(
-                functionTermMap, node, function, parameters);
-        log.debug("values are " + values);
-
+        List<Value> values = this.termMapProcessor.processFunctionTermMap(functionTermMap, node, function, parameters);
+        log.debug("values are {}", values);
 
         return buildSubject(
                 values.stream().map(x -> x.stringValue()).collect(Collectors.toList()),

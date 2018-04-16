@@ -18,6 +18,7 @@ import be.ugent.mmlab.rml.model.dataset.RMLDataset;
 import be.ugent.mmlab.rml.model.std.StdConditionObjectMap;
 
 import static be.ugent.mmlab.rml.model.RDFTerm.TermType.BLANK_NODE;
+import static java.lang.Enum.valueOf;
 
 import be.ugent.mmlab.rml.performer.ConditionalJoinRMLPerformer;
 import be.ugent.mmlab.rml.performer.JoinRMLPerformer;
@@ -53,8 +54,10 @@ import org.slf4j.LoggerFactory;
 public class StdObjectMapProcessor implements ObjectMapProcessor {
     // Log
     private static final Logger log = LoggerFactory.getLogger(StdObjectMapProcessor.class);
+    private static final String executes = FnVocabulary.FNO_NAMESPACE + FnVocabulary.FnTerm.EXECUTES;
 
     protected TermMapProcessor termMapProcessor;
+
 
     public StdObjectMapProcessor(TriplesMap map) {
         TermMapProcessorFactory factory = new ConcreteTermMapFactory();
@@ -356,7 +359,7 @@ public class StdObjectMapProcessor implements ObjectMapProcessor {
     }
 
     public static Map<String, String> retrieveParameters(Object node, TriplesMap functionTriplesMap) {
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
         TermMapProcessorFactory factory = new ConcreteTermMapFactory();
         TermMapProcessor termMapProcessor =
                 factory.create(functionTriplesMap.getLogicalSource().getReferenceFormulation());
@@ -366,43 +369,38 @@ public class StdObjectMapProcessor implements ObjectMapProcessor {
         Set<PredicateObjectMap> poms = functionTriplesMap.getPredicateObjectMaps();
         for (PredicateObjectMap pom : poms) {
             Value property = pom.getPredicateMaps().iterator().next().getConstantValue();
-            String executes = FnVocabulary.FNO_NAMESPACE + FnVocabulary.FnTerm.EXECUTES;
             if (!property.stringValue().equals(executes)) {
                 Value parameter = pom.getPredicateMaps().iterator().next().getConstantValue();
-                try {
-                    referenceValue = pom.getObjectMaps().iterator().next().getReferenceMap().getReference();
-                } catch (Exception e) {
-                    referenceValue = null;
-                    log.error("No reference");
-                }
-                try {
-                    constantValue = pom.getObjectMaps().iterator().next().getConstantValue().stringValue();
-                } catch (Exception e) {
-                    constantValue = null;
-                    log.error("No constant value");
-                }
-                if (referenceValue != null) {
+                ObjectMap objectMap = pom.getObjectMaps().iterator().next();
+                if (objectMap.getReferenceMap() != null) {
+                    referenceValue = objectMap.getReferenceMap().getReference();
                     List<String> value = termMapProcessor.extractValueFromNode(node, referenceValue);
                     if (value.size() != 0) {
                         parameters.put(parameter.stringValue(), value.get(0));
                     }
-                } else if (constantValue != null) {
+                } else if (objectMap.getConstantValue() != null) {
+                    constantValue = objectMap.getConstantValue().stringValue();
                     parameters.put(parameter.stringValue(), constantValue);
                 } else {
-                    // no value is present for this parameter, enter null
-                    parameters.put(parameter.stringValue(), "null"); //TODO wmaroy: change to proper uri for null
-                }
-                //TODO from wmaroy: how to avoid this check?
+                    //TODO wmaroy: change to proper uri for null
+                    parameters.put(parameter.stringValue(), "null");
+                }//TODO from wmaroy: how to avoid this check?
             }
         }
 
         return parameters;
     }
 
-    private void processFallbackMaps(RMLDataset dataset, Resource subject,
-                                     IRI predicate, TriplesMap map, RMLProcessor processor,
-                                     ReferencingObjectMap referencingObjectMap, Object node,
-                                     Map<String, String> parameters, String[] exeTriplesMap) {
+    private void processFallbackMaps(RMLDataset dataset,
+                                     Resource subject,
+                                     IRI predicate,
+                                     TriplesMap map,
+                                     RMLProcessor processor,
+                                     ReferencingObjectMap referencingObjectMap,
+                                     Object node,
+                                     Map<String, String> parameters,
+                                     String[] exeTriplesMap
+    ) {
         GraphMap fallbackGraphMap = null;
 
         Set<ReferencingObjectMap> fallbackReferencingObjectMaps =
@@ -411,11 +409,18 @@ public class StdObjectMapProcessor implements ObjectMapProcessor {
             log.debug("Found fallbacks {}", fallbackReferencingObjectMaps);
             //Process the joins first
             if (fallbackReferencingObjectMaps.size() > 0) {
-                ObjectMapProcessor predicateObjectProcessor =
-                        new StdObjectMapProcessor(map, processor);
+                ObjectMapProcessor predicateObjectProcessor = new StdObjectMapProcessor(map, processor);
                 predicateObjectProcessor.processPredicateObjectMap_RefObjMap(
-                        dataset, subject, predicate, fallbackReferencingObjectMaps, node,
-                        map, parameters, exeTriplesMap, fallbackGraphMap);
+                        dataset,
+                        subject,
+                        predicate,
+                        fallbackReferencingObjectMaps,
+                        node,
+                        map,
+                        parameters,
+                        exeTriplesMap,
+                        fallbackGraphMap
+                );
             }
         }
     }

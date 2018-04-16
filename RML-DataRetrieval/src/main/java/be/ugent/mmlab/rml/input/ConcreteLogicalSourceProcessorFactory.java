@@ -67,7 +67,7 @@ public class ConcreteLogicalSourceProcessorFactory implements SourceProcessorFac
                         break;
                     case ("StdInSource"):
                         log.debug("Source is standard input");
-                        sourceProcessor = new StdInProcessor();
+                        sourceProcessor = new NiFiStdInProcessor();
                         break;
                     default:
                         log.error("Not identified source type");
@@ -116,7 +116,7 @@ public class ConcreteLogicalSourceProcessorFactory implements SourceProcessorFac
                     break;
                 case ("StdInSource"):
                     log.debug("Processor for StdIn Source.");
-                    sourceProcessor = new StdInProcessor();
+                    sourceProcessor = new NiFiStdInProcessor();
                     break;
                 default:
                     log.error("Not identified source type");

@@ -87,7 +87,11 @@ public abstract class AbstractRMLProcessor implements RMLProcessor {
         Resource subject;
         if (subjectMap instanceof FunctionTermMap) {
             subject = subMapProcessor.processSubjectMap(
-                    dataset, (FunctionTermMap) subjectMap, node, processor);
+                    dataset,
+                    (FunctionTermMap) subjectMap,
+                    node,
+                    processor
+            );
         } else {
             subject = subMapProcessor.processSubjectMap(
                     dataset, subjectMap, node, processor);

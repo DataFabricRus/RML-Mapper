@@ -32,9 +32,7 @@ import org.slf4j.LoggerFactory;
 public class JdbcExtractor extends StdSourceExtractor {
 
     // Log
-    private static final Logger log = 
-            LoggerFactory.getLogger(
-            JdbcExtractor.class.getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(JdbcExtractor.class.getSimpleName());
        
     //TODO: The following does not actually iterate - change
     @Override

@@ -6,6 +6,8 @@ import be.ugent.mmlab.rml.model.TriplesMap;
 import be.ugent.mmlab.rml.model.termMap.ReferenceMap;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -15,6 +17,9 @@ import java.util.Set;
  * Created by andimou on 7/8/16.
  */
 public class StdFunctionTermMap extends AbstractTermMap implements FunctionTermMap, ObjectMap, SubjectMap, TermMap {
+
+    static final Logger log = LoggerFactory.getLogger(StdFunctionTermMap.class.getSimpleName());
+
     private IRI functionURI ;
     private TriplesMap functionTriplesMap;
     private Set<IRI> parameters;
@@ -116,6 +121,12 @@ public class StdFunctionTermMap extends AbstractTermMap implements FunctionTermM
         }
     }
 
-
+    protected void checkGlobalConsistency() {
+        if (getTermMapType() == null) {
+            if (getTermType() != TermType.IRI && getTermType() != TermType.LITERAL) {
+                log.error("A constant RDF Term, a column name or a string template must be specified.");
+            }
+        }
+    }
 
 }

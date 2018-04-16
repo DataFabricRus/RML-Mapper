@@ -66,8 +66,7 @@ public class StdSubjectMap extends AbstractTermMap implements SubjectMap {
         // Update triples map if not contains this subject map
         if (ownTriplesMap != null && ownTriplesMap.getSubjectMap() != null) {
             if (ownTriplesMap.getSubjectMap() != this) {
-                log.error("The own triples map "
-                        + "already contains another Subject Map !");
+                log.error("The own triples map already contains another Subject Map !");
             } else {
                 ownTriplesMap.setSubjectMap(this);
             }
@@ -151,6 +150,16 @@ public class StdSubjectMap extends AbstractTermMap implements SubjectMap {
             result += graphMap + ",";
         result += "]]";
         return result;
+    }
+
+    @Override
+    protected void checkGlobalConsistency() {
+        if (getTermMapType() == null) {
+            if (getTermType() != TermType.BLANK_NODE && getTermType() != TermType.IRI) {
+                log.error("If the term map is a subject map: rr:IRI or rr:BlankNode");
+            }
+        }
+
     }
 
 }

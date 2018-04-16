@@ -87,7 +87,7 @@ public class ConcreteSourceFactory implements SourceFactory {
                         break;
                     case ("http://datafabric.cc#StdIn"):
                         log.debug("Source is standard input");
-                        sourceExtractor = new StdInExtractor();
+                        sourceExtractor = new NiFiStdInExtractor();
                         break;
                     default:
                         log.error("Not identified source type");

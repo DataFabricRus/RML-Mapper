@@ -20,7 +20,12 @@ public class JavaFunctionModel extends AbstractFunctionImpl {
 
     public ArrayList<Value> execute(Map<String, String> args) {
         try {
-            return this.toValue(this.function.invoke(null, prepareArguments(args)), getDataType(args));
+            Object[] preparedArguments = prepareArguments(args);
+            if (function.getParameterCount() == preparedArguments.length) {
+                return this.toValue(this.function.invoke(null, prepareArguments(args)), getDataType(args));
+            } else {
+                return null;
+            }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             return null;
@@ -34,13 +39,11 @@ public class JavaFunctionModel extends AbstractFunctionImpl {
                         .getParameters()
                         .keySet()
                         .toArray(new String[getFunctionModelPOJO().getParameters().size()]);
-        Object[] preparedArguments = new Object[parameterNames.length];
+        Object[] preparedArguments = new Object[args.size()];
         Class[] paramTypes = function.getParameterTypes();
         for (int i = 0; i < getFunctionModelPOJO().getParameters().size(); i++) {
             if (args.get(parameterNames[i]) != null) {
                 preparedArguments[i] = parseParameter(args.get(parameterNames[i]), paramTypes[i]);
-            } else {
-                preparedArguments[i] = null;
             }
         }
         return preparedArguments;

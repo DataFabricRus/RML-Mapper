@@ -7,25 +7,25 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 
 /**
- *************************************************************************
- *
+ * ************************************************************************
+ * <p>
  * RML - Model : TermMap Interface
+ * <p>
+ * A Term Map generates an RDF term from a Logical Source.
  *
- * A Term Map generates an RDF term from a Logical Source. 
- * 
  * @author andimou, mielvandersande
- * 
- ***************************************************************************
+ * <p>
+ * **************************************************************************
  */
 public interface TermMap {
 
     /**
      * A Term Map can be one of the following:
      * Subject Map Predicate Map Object Map or Graph Map.
-     * A Term Map must be exactly one of the following types: 
+     * A Term Map must be exactly one of the following types:
      * CONSTANT_VALUED REFERENCE_VALUED TEMPLATE_VALUED
      */
-    public enum TermMapType {
+    enum TermMapType {
         // A constant-valued Term Map always generates the same RDF term
         // which is equal to the provided constant value
         CONSTANT_VALUED,
@@ -39,64 +39,55 @@ public interface TermMap {
     }
 
     /**
-     *
      * @return TriplesMap
-     * 
      */
-    public TriplesMap getOwnTriplesMap();
-    
+    TriplesMap getOwnTriplesMap();
+
     /**
-     *
      * @param ownTriplesMap
      */
-    public void setOwnTriplesMap(TriplesMap ownTriplesMap);
+    void setOwnTriplesMap(TriplesMap ownTriplesMap);
 
     /**
-     *
      * @return
      */
-    public TermMapType getTermMapType();
-    
+    TermMapType getTermMapType();
+
     /**
-     *
      * @param termMapType
      */
-    public void setTermMapType(TermMapType termMapType);
+    void setTermMapType(TermMapType termMapType);
 
     /**
-     * The constant value of a constant-valued Term Map is the RDF term 
-     * that is the value of its rr:constant property. 
+     * The constant value of a constant-valued Term Map is the RDF term
+     * that is the value of its rr:constant property.
      */
-    public Value getConstantValue();
-    
+    Value getConstantValue();
+
     /**
-     *
      * @param value
      */
-    public void setConstantValue(Value value);
+    void setConstantValue(Value value);
 
     /**
-     * The value of the Term Map is the data value of that reference. 
+     * The value of the Term Map is the data value of that reference.
      */
-    public ReferenceMap getReferenceMap();
-    
+    ReferenceMap getReferenceMap();
+
     /**
-     *
      * @param refrence
      */
-    public void setReferenceMap(ReferenceMap refrence);
-    
+    void setReferenceMap(ReferenceMap refrence);
+
     /**
-     *
      * @return
      */
-    public TemplateMap getTemplateMap();
-    
+    TemplateMap getTemplateMap();
+
     /**
-     *
      * @param template
      */
-    public void setTemplateMap(TemplateMap template);
+    void setTemplateMap(TemplateMap template);
 
     /**
      * The value of the rr:template property MUST be a valid string template. A
@@ -104,83 +95,79 @@ public interface TermMap {
      * multiple components. It can reference column names by enclosing them in
      * curly braces. Only if TEMPLATE_VALUED type.
      */
-    public String getStringTemplate();
-    
-    /**
-     *
-     * @param template
-     */
-    public void setStringTemplate(String template);
+    String getStringTemplate();
 
     /**
-     * If the Term Map has an optional rr:termType property, 
+     * @param template
+     */
+    void setStringTemplate(String template);
+
+    /**
+     * If the Term Map has an optional rr:termType property,
      * then its term type is the value of that property.
      */
-    public TermType getTermType();
+    TermType getTermType();
 
     /**
      * A Term Map with a term type of rr:Literal MAY have a specified language
      * tag. It must be valid too.
      */
-    public String getLanguageTag();
-    
+    String getLanguageTag();
+
     /**
-     *
      * @param language
      */
-    public void setLanguageTag(String language);
+    void setLanguageTag(String language);
 
     /**
      * A typeable Term Map is a Term Map with a term type of rr:Literal that
      * does not have a specified language tag.
      */
-    public boolean isTypeable();
+    boolean isTypeable();
 
     /**
-     * Typeable Term Maps may generate typed literals. 
+     * Typeable Term Maps may generate typed literals.
      * The datatype of these literals can be explicitly specified using rr:datatype.
      */
-    public IRI getDataType();
-    
-    /**
-     *
-     * @param uri
-     */
-    public void setDataType(IRI uri);
+    IRI getDataType();
 
     /**
-     * A typeable Term Map has an implicit datatype. 
-     * If the Term Map is a reference-valued Term Map, 
-     * then the implicit datatype is the corresponding
-     * RDF datatype of the respective reference in the Logical Source.
-     * Otherwise, the Term Map must be a template-valued term map 
-     * and its implicit datatype must be empty.
-     */
-    public IRI getImplicitDataType();
-    
-    /**
-     *
      * @param uri
      */
-    public void setImplicitDataType(IRI uri);
+    void setDataType(IRI uri);
+
+    /**
+     * A typeable Term Map has an implicit datatype.
+     * If the Term Map is a reference-valued Term Map,
+     * then the implicit datatype is the corresponding
+     * RDF datatype of the respective reference in the Logical Source.
+     * Otherwise, the Term Map must be a template-valued term map
+     * and its implicit datatype must be empty.
+     */
+    IRI getImplicitDataType();
+
+    /**
+     * @param uri
+     */
+    void setImplicitDataType(IRI uri);
 
     /**
      * A datatype override is in effect on a typeable term map if it has a
      * specified datatype, and the specified datatype is different from its
      * implicit datatype.
      */
-    public boolean isOveridden();
-    
-    public void setCompletion();
-    
-    public boolean getCompletion();
-    
-    public void setValidation();
-    
-    public boolean getValidation();
+    boolean isOveridden();
 
-    public void setGraphMap(GraphMap graphMap);
+    void setCompletion();
 
-    public GraphMap getGraphMap();
+    boolean getCompletion();
+
+    void setValidation();
+
+    boolean getValidation();
+
+    void setGraphMap(GraphMap graphMap);
+
+    GraphMap getGraphMap();
 
 }
